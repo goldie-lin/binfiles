@@ -1,0 +1,118 @@
+#!/usr/bin/env bash
+# Author: Goldie Lin
+# Description: Generate tag files for source code browsering.
+# Requirements:
+#   * ctags (exuberant-ctags)
+#   * cscope
+#   * gtags (global)
+# Usage: cd to codebase root directory, then run this script.
+
+set -e
+# Any subsequent commands which fail will cause the shell script to exit immediately
+
+# Variable definitions
+# ====================
+
+# tags to be generated
+declare -ra tag_list=( "gtags" ) # "cscope" "ctags"
+
+# filelist
+readonly file_list="cscope.files"
+
+# required pkg list: executable, package name
+declare -rA req_pkgs=( \
+  ["ctags"]="exuberant-ctags"
+  ["cscope"]="cscope"
+  ["gtags"]="global"
+)
+
+# Function definitions
+# ====================
+
+# check requirements
+# Ref: https://github.com/bcbcarl/ultra_vim/blob/master/install.sh
+check_depends() {
+  local i=""
+
+  for i in "${!req_pkgs[@]}"; do
+    if ! hash "$i" 2>/dev/null; then
+      echo >&2 "'$i' (${req_pkgs[$i]}) not installed. Aborting."
+      exit 1
+    fi
+  done
+}
+
+# generate filelist
+gen_filelist() {
+  find . -regextype posix-extended \
+    \( -regex '^.*\/\.git($|\/.*$)' \
+    -o -regex '^.*\/\.repo($|\/.*$)' \
+    -o -regex '^.*\/\.svn($|\/.*$)' \
+    -o -regex '^.*\/\.bzr($|\/.*$)' \
+    -o -regex '^.*\/\.hg($|\/.*$)' \
+    -o -regex '^\.\/out($|\/.*$)' \
+    -o -regex '^\.\/cts($|\/.*$)' \
+    -o -regex '^\.\/docs($|\/.*$)' \
+    -o -regex '^\.\/sdk($|\/.*$)' \
+    -o -regex '^\.\/ndk($|\/.*$)' \
+    -o -regex '^\.\/gdk($|\/.*$)' \
+    -o -regex '^\.\/pdk($|\/.*$)' \
+    -o -regex '^\.\/prebuilt($|\/.*$)' \
+    -o -regex '^\.\/prebuilts($|\/.*$)' \
+    -o -regex '^\.\/developers($|\/.*$)' \
+    -o -regex '^\.\/development($|\/.*$)' \
+    \) -prune -o \
+    -type f -iregex '^.*\.(c|h|l|y|S|cc|hh|cpp|hpp|cxx|hxx|c++|java|aidl|php|php3|phtml|pl|py|sh)$' \
+    -print > "${file_list}"
+}
+
+# generate tags based on the same filelist
+gen_tags() {
+  local i=""
+
+  for i in "$@"; do
+    case "$i" in
+      cscope) cscope -bqki "${file_list}";;
+      ctags) ctags -n --fields=+ai --C++-types=+p -L "${file_list}";;
+      gtags) gtags -f "${file_list}";;
+    esac
+  done
+}
+
+print_usage() {
+  cat << _USAGE_
+Usage:
+
+# Incremental update GTAGS with whole source tree, but it'll reuse *builtin*
+# file search pattern. (Not suited for kernel, too many different arch.)
+global -vu
+
+# Incremental update GTAGS for only single file you specified.
+global -vu --single-update <relative/path/to/a/file.ext>
+
+# Manually generate HTAGS hypertext XHTML in "./HTML/"
+htags -xsanohITt "PROJECT TITLE"
+  # -t, --title title: The title of this hypertext.
+  # -m, --main-func name: Specify the main function name. (default is main)
+firefox HTML/index.html
+
+# Manually generate Doxygen HTML in "./html/"
+doxygen -g
+vi Doxyfile
+  INPUT                  = .
+  RECURSIVE              = YES
+  SOURCE_BROWSER         = YES
+  USE_HTAGS              = YES
+doxygen
+firefox html/index.html
+_USAGE_
+}
+
+main() {
+  check_depends
+  gen_filelist
+  gen_tags "${tag_list[@]}"
+  print_usage
+}
+
+main "$@"
