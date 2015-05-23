@@ -63,7 +63,7 @@ declare -rA git_pull_list=( \
 
 # repo init list: title, url
 declare -rA repo_init_list=( \
-  ["Android (AOSP)"]="-u https://android.googlesource.com/platform/manifest -b master -m default.xml"
+  ["Android (AOSP)"]="https://android.googlesource.com/platform/manifest"
 )
 
 # repo sync list: title, path
