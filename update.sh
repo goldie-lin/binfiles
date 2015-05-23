@@ -120,6 +120,29 @@ _get_linux_distro_name() {
   fi
 }
 
+_get_python_variant_for_repo() {
+  local _python="python"
+  local _python_version=""
+  local _returncode="0"
+
+  # Current repo utility only support Python verion 2.6 - 2.7
+  # TODO: Maybe need to update this version check in the future.
+  _python_version="$(python -V |& sed 's/Python//g;s/\s\+//g')"
+  if [[ ! "${_python_version}" =~ ^2\.(6|7)\..*$ ]]; then
+    if hash "python2.7" 2>/dev/null; then
+      _python="python2.7"
+    elif hash "python2.6" 2>/dev/null; then
+      _python="python2.6"
+    else
+      echo >&2 "Unaccepted version of $(python -V) for repo utility"
+      _returncode="1"
+    fi
+  fi
+
+  echo "${_python}"
+  return "${_returncode}"
+}
+
 git_clone() {
   local -r _url="$1"
   local -r _path="$2"
@@ -140,22 +163,7 @@ repo_init() {
   local -r _path="$1"
   local -r _url="$2"
   local -r _repo="$(which repo)"
-  local _python="python"
-  local _python_version=""
-
-  # Current repo tool only support Python verion 2.6 - 2.7
-  # TODO: Maybe need to update this version check in the future
-  _python_version="$(python -V |& sed 's/Python//g;s/\s\+//g')"
-  if [[ ! "${_python_version}" =~ ^2\.(6|7)\..*$ ]]; then
-    if hash "python2.7" 2>/dev/null; then
-      _python="python2.7"
-    elif hash "python2.6" 2>/dev/null; then
-      _python="python2.6"
-    else
-      echo >&2 "Unaccepted version of $(python -V) for repo tool."
-      return 1
-    fi
-  fi
+  local -r _python="$(_get_python_variant_for_repo)"
 
   mkdir -p "${_path}"
   cd "${_path}"
@@ -165,22 +173,7 @@ repo_init() {
 repo_sync() {
   local -r _path="$1"
   local -r _repo="$(which repo)"
-  local _python="python"
-  local _python_version=""
-
-  # Current repo tool only support Python verion 2.6 - 2.7
-  # TODO: Maybe need to update this version check in the future
-  _python_version="$(python -V |& sed 's/Python//g;s/\s\+//g')"
-  if [[ ! "${_python_version}" =~ ^2\.(6|7)\..*$ ]]; then
-    if hash "python2.7" 2>/dev/null; then
-      _python="python2.7"
-    elif hash "python2.6" 2>/dev/null; then
-      _python="python2.6"
-    else
-      echo >&2 "Unaccepted version of $(python -V) for repo tool."
-      return 1
-    fi
-  fi
+  local -r _python="$(_get_python_variant_for_repo)"
 
   cd "${_path}"
   "${_python}" "${_repo}" sync "${repo_sync_opt[@]}"
