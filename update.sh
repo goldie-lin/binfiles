@@ -136,6 +136,32 @@ git_pull() {
   fi
 }
 
+repo_init() {
+  local -r _path="$1"
+  local -r _url="$2"
+  local -r _repo="$(which repo)"
+  local _python="python"
+  local _python_version=""
+
+  # Current repo tool only support Python verion 2.6 - 2.7
+  # TODO: Maybe need to update this version check in the future
+  _python_version="$(python -V |& sed 's/Python//g;s/\s\+//g')"
+  if [[ ! "${_python_version}" =~ ^2\.(6|7)\..*$ ]]; then
+    if hash "python2.7" 2>/dev/null; then
+      _python="python2.7"
+    elif hash "python2.6" 2>/dev/null; then
+      _python="python2.6"
+    else
+      echo >&2 "Unaccepted version of $(python -V) for repo tool."
+      return 1
+    fi
+  fi
+
+  mkdir -p "${_path}"
+  cd "${_path}"
+  "${_python}" "${_repo}" init -u "${_url}"
+}
+
 repo_sync() {
   local -r _path="$1"
   local -r _repo="$(which repo)"
@@ -180,11 +206,17 @@ do_git_pull_list() {
 do_repo_sync_list() {
   local _title=""
   local _path=""
+  local _url=""
 
   for _title in "${!repo_sync_list[@]}"; do
     _path="${repo_sync_list[$_title]}"
+    _url="${repo_init_list[$_title]}"
     echo_title "${_title}"
-    repo_sync "${_path}"
+    if [[ -d "${_path}" ]]; then
+      repo_sync "${_path}"
+    else
+      repo_init "${_path}" "${_url}"
+    fi
   done
 }
 
