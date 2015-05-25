@@ -1,9 +1,15 @@
 #!/usr/bin/env bash
 # Author: Goldie Lin
-# Usage: cd to Android's root folder and run this script.
+# Usage: cd to Android root and run this script.
+
+# Variable definitions
+# ====================
 
 def_file="build/core/definitions.mk"
 out_file="android_makefile_define_macros.list"
+
+# Function definitions
+# ====================
 
 check_pwd() {
   [[ ! -f "Makefile" ]] && echo >&2 "Makefile not found! (Please cd to Android root)" && return 1
