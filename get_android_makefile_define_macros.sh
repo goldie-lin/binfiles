@@ -2,6 +2,9 @@
 # Author: Goldie Lin
 # Usage: cd to Android root and run this script.
 
+set -e
+# Any subsequent commands which fail will cause the shell script to exit immediately
+
 # Variable definitions
 # ====================
 
