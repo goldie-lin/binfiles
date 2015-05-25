@@ -15,7 +15,10 @@ out_file="android_makefile_define_macros.list"
 # ====================
 
 check_pwd() {
-  [[ ! -f "Makefile" ]] && echo >&2 "Makefile not found! (Please cd to Android root)" && return 1
+  if [[ ! -d ".repo" ]]; then
+    echo >&2 "Error: Please cd to Android root and run again."
+    return 1
+  fi
 }
 
 gen_def_list() {
