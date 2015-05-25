@@ -25,7 +25,8 @@ gen_def_list() {
   local def_list=""
 
   def_list="$(grep '^define' "${def_file}" | cut -d' ' -f2- | sort -u)"
-  echo "${def_list}" | tee "${out_file}"
+  echo "${def_list}" > "${out_file}"
+  echo "Save to file: '${out_file}'"
 }
 
 main() {
