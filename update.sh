@@ -148,6 +148,7 @@ git_clone() {
   local -r _path="$2"
 
   git clone "${_url}" "${_path}"
+  git -C "${_path}" config --unset branch.master.rebase
 }
 
 git_pull() {
