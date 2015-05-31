@@ -206,11 +206,10 @@ do_repo_sync_list() {
     _path="${repo_sync_list[$_title]}"
     _url="${repo_init_list[$_title]}"
     echo_title "${_title}"
-    if [[ -d "${_path}" ]]; then
-      repo_sync "${_path}"
-    else
+    if [[ ! -d "${_path}" ]]; then
       repo_init "${_path}" "${_url}"
     fi
+    repo_sync "${_path}"
   done
 }
 
