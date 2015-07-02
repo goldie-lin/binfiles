@@ -36,6 +36,7 @@ declare -rA git_clone_list=( \
   ["linux"]="git://github.com/torvalds/linux.git"
   ["shellcheck"]="git://github.com/koalaman/shellcheck.git"
   ["crash"]="git://github.com/crash-utility/crash.git"
+  ["tmuxinator"]="git://github.com/tmuxinator/tmuxinator.git"
 )
 
 # git pull list: title, path
@@ -59,6 +60,7 @@ declare -rA git_pull_list=( \
   ["linux"]="${HOME}/opt/linux"
   ["shellcheck"]="${HOME}/opt/shellcheck"
   ["crash"]="${HOME}/opt/crash"
+  ["tmuxinator"]="${HOME}/opt/tmuxinator"
 )
 
 # repo init list: title, url
