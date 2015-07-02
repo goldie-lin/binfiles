@@ -220,8 +220,13 @@ do_update_sys_pkgs() {
 
   case "${_distro}" in
   "Arch")
-    echo_title "pacman"
-    sudo pacman -Syu
+    if hash "yaourt" 2>/dev/null; then
+      echo_title "yaourt"
+      yaourt -Syua
+    else
+      echo_title "pacman"
+      sudo pacman -Syu
+    fi
     ;;
   "Ubuntu")
     echo_title "apt"
