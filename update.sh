@@ -215,6 +215,11 @@ do_repo_sync_list() {
   done
 }
 
+do_update_vim_plugins() {
+  # update via junegunn/vim-plug plugin manager
+  vim -c 'PlugUpdate | q | q'
+}
+
 do_update_sys_pkgs() {
   local -r _distro="$(_get_linux_distro_name)"
 
@@ -240,6 +245,7 @@ do_update_sys_pkgs() {
 
 main() {
   do_update_sys_pkgs
+  do_update_vim_plugins
   do_git_pull_list
   do_repo_sync_list
 }
