@@ -218,7 +218,7 @@ do_repo_sync_list() {
 do_update_vim_plugins() {
   echo_title "vim plugins"
   # update via junegunn/vim-plug plugin manager
-  vim -c 'PlugUpdate | q | q'
+  vim +PlugUpdate +q +q
 }
 
 do_update_sys_pkgs() {
