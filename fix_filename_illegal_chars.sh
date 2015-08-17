@@ -1,0 +1,98 @@
+#!/usr/bin/env bash
+# Author: Goldie Lin
+# Description:
+#   Fix/Replace illegal characters in filename recursively in current directory,
+#   included all sub-directories.
+# Usage:
+#   Simply run `fix_filename_illegal_chars.sh` in the folder you want,
+#   or specific a file or a directory as first argument.
+# References:
+#   [1] http://mywiki.wooledge.org/ArithmeticExpression
+
+set -e
+# Any subsequent commands which fail will cause the shell script to exit immediately
+
+# Variable definitions
+# ====================
+
+# sed script
+if read -r -d '' sed_script << '_SED_SCRIPT_'
+# replace the start of square bracket with a underline:
+s/\[/_/g
+# replace the end of square bracket with a underline:
+s/]/_/g
+# replace tilde with a dash:
+s/~\+/-/g
+# replace illegal chars with a underline:
+s/[[:space:](){}<>`!@#$%*?]\+/_/g
+# replace ampersand with a string "_and_":
+s/&/_and_/g
+# replace a sequence of underlines with a underline:
+s/_\+/_/g
+# replace a sequence of dashes with a dash:
+s/-\+/-/g
+# replace underline+dash with a dash:
+s/\(-_\|_-\)/-/g
+# trim leading underlines or dashes:
+s/^[-_]\+\(.\)/\1/
+# trim trailing underlines or dashes before file extension:
+s/[-_]\+\(\.[[:alnum:]]\{1,5\}\)$/\1/
+_SED_SCRIPT_
+then true; fi
+
+# Function definitions
+# ====================
+
+fix_name() {
+  local -r path="$1"
+  local -r file_or_dir="$2"
+  local -a flist=()
+  local -i i=0
+  local j=""
+  local path2=""
+  local name_org=""
+  local name_mod=""
+
+  if [[ -d "$1" ]]; then
+    while IFS= read -r -d $'\0' j; do
+      flist[i++]="$j" # array indices are numeric context, will force arithmetic evaluation [1]
+    done < <(find "${path}" -depth -mindepth 1 -type "${file_or_dir}" -print0) # default find won't follow symlinks, unless "-L" option
+  elif [[ -f "$1" ]]; then
+      flist[i++]="$path"
+  else
+    return 0
+  fi
+
+  for ((i=0; i<${#flist[@]}; i++)); do
+    path2="$(dirname "${flist[$i]}")"
+    name_org="$(basename "${flist[$i]}")"
+    name_mod="$(echo "${name_org}" | sed -f <(echo -n "${sed_script}"))"
+    if [[ "${name_org}" != "${name_mod}" ]]; then
+      mv -v "${path2}/${name_org}" "${path2}/${name_mod}"
+    fi
+  done
+}
+
+fix_directories() {
+  local -r path="$1"
+  fix_name "${path}" d
+}
+
+fix_files() {
+  local -r path="$1"
+  fix_name "${path}" f
+}
+
+main() {
+  if [[ -e "$1" ]]; then
+    if [[ -d "$1" ]]; then
+      fix_directories "$1"
+    fi
+    fix_files "$1"
+  else
+    fix_directories .
+    fix_files .
+  fi
+}
+
+main "$@"
