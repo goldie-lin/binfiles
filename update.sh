@@ -36,6 +36,7 @@ declare -rA git_clone_list=( \
   ["shellcheck"]="git://github.com/koalaman/shellcheck.git"
   ["crash"]="git://github.com/crash-utility/crash.git"
   ["tmuxinator"]="git://github.com/tmuxinator/tmuxinator.git"
+  ["vimperator-colors"]="git://github.com/vimpr/vimperator-colors.git"
 )
 
 # git pull list: title, path
@@ -59,6 +60,7 @@ declare -rA git_pull_list=( \
   ["shellcheck"]="${HOME}/opt/shellcheck"
   ["crash"]="${HOME}/opt/crash"
   ["tmuxinator"]="${HOME}/opt/tmuxinator"
+  ["vimperator-colors"]="${HOME}/opt/vimperator-colors"
 )
 
 # repo init list: title, url
