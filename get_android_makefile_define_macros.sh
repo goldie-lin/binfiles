@@ -8,8 +8,8 @@ set -e
 # Variable definitions
 # ====================
 
-def_file="build/core/definitions.mk"
-out_file="android_makefile_define_macros.list"
+readonly def_file="build/core/definitions.mk"
+readonly out_file="android_makefile_define_macros.list"
 
 # Function definitions
 # ====================
