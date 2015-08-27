@@ -10,12 +10,13 @@ set -e
 
 readonly def_file="build/core/definitions.mk"
 readonly out_file="android_makefile_define_macros.list"
+readonly top_file="build/core/envsetup.mk"
 
 # Function definitions
 # ====================
 
 check_pwd() {
-  if [[ ! -d ".repo" ]]; then
+  if [[ ! -f "${top_file}" ]]; then
     echo >&2 "Error: Please cd to Android root and run again."
     return 1
   fi
