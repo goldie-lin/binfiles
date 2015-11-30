@@ -74,7 +74,7 @@ gen_tags() {
     case "$i" in
       cscope) cscope -bqki "${file_list}";;
       ctags) ctags -n --fields=+ai --C++-types=+p -L "${file_list}";;
-      gtags) gtags -f "${file_list}";;
+      gtags) gtags --accept-dotfiles -f "${file_list}";;
     esac
   done
 }
