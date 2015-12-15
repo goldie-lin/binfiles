@@ -36,6 +36,7 @@ declare -rA git_clone_list=( \
   ["crash"]="git://github.com/crash-utility/crash.git"
   ["tmuxinator"]="git://github.com/tmuxinator/tmuxinator.git"
   ["vimperator-colors"]="git://github.com/vimpr/vimperator-colors.git"
+  ["git-lfs"]="git://github.com/github/git-lfs.git"
 )
 
 # git pull list: title, path
@@ -59,6 +60,7 @@ declare -rA git_pull_list=( \
   ["crash"]="${HOME}/opt/crash"
   ["tmuxinator"]="${HOME}/opt/tmuxinator"
   ["vimperator-colors"]="${HOME}/opt/vimperator-colors"
+  ["git-lfs"]="${HOME}/opt/git-lfs"
 )
 
 # repo init list: title, url
