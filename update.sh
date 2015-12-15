@@ -37,6 +37,7 @@ declare -rA git_clone_list=( \
   ["tmuxinator"]="git://github.com/tmuxinator/tmuxinator.git"
   ["vimperator-colors"]="git://github.com/vimpr/vimperator-colors.git"
   ["git-lfs"]="git://github.com/github/git-lfs.git"
+  ["bomr"]="git://github.com/jamesqo/bomr.git"
 )
 
 # git pull list: title, path
@@ -61,6 +62,7 @@ declare -rA git_pull_list=( \
   ["tmuxinator"]="${HOME}/opt/tmuxinator"
   ["vimperator-colors"]="${HOME}/opt/vimperator-colors"
   ["git-lfs"]="${HOME}/opt/git-lfs"
+  ["bomr"]="${HOME}/opt/bomr"
 )
 
 # repo init list: title, url
