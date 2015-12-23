@@ -38,6 +38,7 @@ declare -rA git_clone_list=( \
   ["vimperator-colors"]="git://github.com/vimpr/vimperator-colors.git"
   ["git-lfs"]="git://github.com/github/git-lfs.git"
   ["bomr"]="git://github.com/jamesqo/bomr.git"
+  ["ag"]="git://github.com/ggreer/the_silver_searcher.git"
 )
 
 # git pull list: title, path
@@ -63,6 +64,7 @@ declare -rA git_pull_list=( \
   ["vimperator-colors"]="${HOME}/opt/vimperator-colors"
   ["git-lfs"]="${HOME}/opt/git-lfs"
   ["bomr"]="${HOME}/opt/bomr"
+  ["ag"]="${HOME}/opt/the_silver_searcher"
 )
 
 # repo init list: title, url
