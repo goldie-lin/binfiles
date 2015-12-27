@@ -40,6 +40,7 @@ declare -rA git_clone_list=( \
   ["bomr"]="git://github.com/jamesqo/bomr.git"
   ["ag"]="git://github.com/ggreer/the_silver_searcher.git"
   ["tomorrow-theme"]="git://github.com/chriskempson/tomorrow-theme.git"
+  ["pcmanx"]="git://github.com/pcman-bbs/pcmanx.git"
 )
 
 # git pull list: title, path
@@ -67,6 +68,7 @@ declare -rA git_pull_list=( \
   ["bomr"]="${HOME}/opt/bomr"
   ["ag"]="${HOME}/opt/the_silver_searcher"
   ["tomorrow-theme"]="${HOME}/opt/tomorrow-theme"
+  ["pcmanx"]="${HOME}/opt/pcmanx"
 )
 
 # repo init list: title, url
