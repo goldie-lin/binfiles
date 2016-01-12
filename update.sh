@@ -111,17 +111,26 @@ _get_linux_distro_name() {
   local -r _os="$(uname -s)"
 
   if [ "${_os}" = "Linux" ]; then
-    if [ -f /etc/lsb-release ]; then
-      # TODO: Should we trust the lsb_release command?
+    if hash "lsb_release " 2>/dev/null; then
       lsb_release -s -i
+    elif [ -r /etc/lsb-release ]; then
+      ( source /etc/lsb-release && echo "$DISTRIB_ID")
     elif [ -f /etc/arch-release ]; then
       echo "Arch"
     elif [ -f /etc/debian_version ]; then
       echo "Debian"
+    elif [ -f /etc/fedora-release ]; then
+      echo "Fedora"
     elif [ -f /etc/redhat-release ]; then
       echo "RedHat"
+    elif [ -f /etc/centos-release ]; then
+      echo "CentOS"
+    elif [ -f /etc/oracle-release ]; then
+      echo "Oracle"
     elif [ -f /etc/SuSE-release ]; then
       echo "SuSE"
+    elif [ -r /etc/os-release ]; then
+      ( source /etc/os-release && echo "$ID")
     else
       echo "Unknown"
     fi
