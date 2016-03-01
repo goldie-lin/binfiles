@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+# Author: Goldie Lin
+# Description: Convert source text to HTML with syntax color code.
+# Requirements: vim, libreoffice.
+# Usage:
+#   vim_convert_syntax_to_html <file>
+#   Then, you can use libreoffice to open this html file,
+#   and copy contains with color code to other program.
+
+# References:
+# * http://vi.stackexchange.com/questions/792/how-to-convert-a-source-code-file-into-html
+# * http://askubuntu.com/questions/60778/how-can-i-convert-an-odt-file-to-a-pdf
+
+set -e
+set -o pipefail
+# Any subsequent commands which fail will cause the shell script to exit immediately
+
+main() {
+  local -r input="$(readlink -f "$1")"
+  local -r html="${input}.html"
+  #local -r odt="${html}.odt"
+
+  if [ ! -f "${input}" ]; then
+    echo "Usage: $0 <file>"
+  else
+    # Note: You can only use up to (max) 10 of "-c" commands in vim.
+    vim -E \
+      -c "colorscheme default" \
+      -c "set nolist nonumber norelativenumber nocursorline" \
+      -c "let g:html_ignore_folding=1" \
+      -c "let g:html_no_progress=1" \
+      -c "let g:html_number_lines=0" \
+      -c "let g:html_pre_wrap = 0" \
+      -c "let g:html_use_css=1" \
+      -c "let g:html_ignore_conceal=1 | setlocal conceallevel=0" \
+      -c "runtime! syntax/2html.vim | w ${html} | q | q" \
+      "${input}" || true
+    #libreoffice --headless --convert-to odt "${html}"
+  fi
+
+}
+
+main "$@"
