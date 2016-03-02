@@ -11,9 +11,9 @@
 # * http://vi.stackexchange.com/questions/792/how-to-convert-a-source-code-file-into-html
 # * http://askubuntu.com/questions/60778/how-can-i-convert-an-odt-file-to-a-pdf
 
-set -e
+set -o errexit
 set -o pipefail
-# Any subsequent commands which fail will cause the shell script to exit immediately
+set -o nounset
 
 main() {
   local -r input="$(readlink -f "$1")"
