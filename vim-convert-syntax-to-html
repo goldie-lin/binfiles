@@ -37,7 +37,6 @@ main() {
       "${input}" || true
     #libreoffice --headless --convert-to odt "${html}"
   fi
-
 }
 
 main "$@"
