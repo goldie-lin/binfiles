@@ -15,6 +15,9 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
+# Function definitions
+# ====================
+
 main() {
   local -r input="$(readlink -f "$1")"
   local -r html="${input}.html"
