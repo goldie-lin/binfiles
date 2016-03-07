@@ -46,22 +46,22 @@ check_depends() {
 gen_filelist() {
   # type `find -regextype help` to get supported regextypes in findutils.
   find . -regextype posix-egrep \
-    \( -regex '^.*\/\.git($|\/.*$)' \
-    -o -regex '^.*\/\.repo($|\/.*$)' \
-    -o -regex '^.*\/\.svn($|\/.*$)' \
-    -o -regex '^.*\/\.bzr($|\/.*$)' \
-    -o -regex '^.*\/\.hg($|\/.*$)' \
-    -o -regex '^\.\/out($|\/.*$)' \
-    -o -regex '^\.\/cts($|\/.*$)' \
-    -o -regex '^\.\/docs($|\/.*$)' \
-    -o -regex '^\.\/sdk($|\/.*$)' \
-    -o -regex '^\.\/ndk($|\/.*$)' \
-    -o -regex '^\.\/gdk($|\/.*$)' \
-    -o -regex '^\.\/pdk($|\/.*$)' \
-    -o -regex '^\.\/prebuilt($|\/.*$)' \
-    -o -regex '^\.\/prebuilts($|\/.*$)' \
-    -o -regex '^\.\/developers($|\/.*$)' \
-    -o -regex '^\.\/development($|\/.*$)' \
+    \( -regex '^.*\/\.git(|\/.*)$' \
+    -o -regex '^.*\/\.repo(|\/.*)$' \
+    -o -regex '^.*\/\.svn(|\/.*)$' \
+    -o -regex '^.*\/\.bzr(|\/.*)$' \
+    -o -regex '^.*\/\.hg(|\/.*)$' \
+    -o -regex '^\.\/out(|\/.*)$' \
+    -o -regex '^\.\/cts(|\/.*)$' \
+    -o -regex '^\.\/docs(|\/.*)$' \
+    -o -regex '^\.\/sdk(|\/.*)$' \
+    -o -regex '^\.\/ndk(|\/.*)$' \
+    -o -regex '^\.\/gdk(|\/.*)$' \
+    -o -regex '^\.\/pdk(|\/.*)$' \
+    -o -regex '^\.\/prebuilt(|\/.*)$' \
+    -o -regex '^\.\/prebuilts(|\/.*)$' \
+    -o -regex '^\.\/developers(|\/.*)$' \
+    -o -regex '^\.\/development(|\/.*)$' \
     \) -prune -o \
     -type f -iregex '^.*\.(c|h|l|y|S|cc|hh|cpp|hpp|cxx|hxx|c++|java|aidl|php|php3|phtml|pl|py|sh)$' \
     -print > "${file_list}"
