@@ -45,7 +45,7 @@ check_depends() {
 # generate filelist
 gen_filelist() {
   # type `find -regextype help` to get supported regextypes in findutils.
-  find . -regextype posix-extended \
+  find . -regextype posix-egrep \
     \( -regex '^.*\/\.git($|\/.*$)' \
     -o -regex '^.*\/\.repo($|\/.*$)' \
     -o -regex '^.*\/\.svn($|\/.*$)' \
