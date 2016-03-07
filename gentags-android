@@ -63,7 +63,8 @@ gen_filelist() {
     -o -regex '^\.\/developers(|\/.*)$' \
     -o -regex '^\.\/development(|\/.*)$' \
     \) -prune -o \
-    -type f -iregex '^.*\.(c|h|l|y|S|cc|hh|cpp|hpp|cxx|hxx|c++|java|aidl|php|php3|phtml|pl|py|sh)$' \
+    -type f -iregex \
+    '^.*\/(Makefile(|\..*)|[^/]*\.(c|h|l|y|S|cc|hh|cpp|hpp|cxx|hxx|c++|java|aidl|xml|pl|py|sh|mk|mak|make|makefile||gradle))$' \
     -print > "${file_list}"
 }
 
