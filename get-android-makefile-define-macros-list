@@ -10,7 +10,6 @@ set -o nounset
 # ====================
 
 readonly def_file="build/core/definitions.mk"
-readonly out_file="android_makefile_define_macros.list"
 readonly top_file="build/core/envsetup.mk"
 
 # Function definitions
@@ -27,8 +26,7 @@ gen_def_list() {
   local def_list=""
 
   def_list="$(grep '^define' "${def_file}" | cut -d' ' -f2- | sort -u)"
-  echo "${def_list}" > "${out_file}"
-  echo "Save to file: '${out_file}'"
+  echo "${def_list}"
 }
 
 main() {
