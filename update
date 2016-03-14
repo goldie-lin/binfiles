@@ -257,7 +257,7 @@ do_update_sys_pkgs() {
     ;;
   "Ubuntu")
     echo_title "apt"
-    sudo apt-get update && sudo apt-get dist-upgrade
+    sudo apt update && sudo apt full-upgrade
     ;;
   *)
     echo_title "Error: Unknown disro '${_distro}' to update system packages!"
