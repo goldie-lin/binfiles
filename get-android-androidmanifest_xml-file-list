@@ -2,9 +2,7 @@
 # Author: Goldie Lin
 # Usage: cd to Android root and run this script.
 
-set -o errexit
-set -o pipefail
-set -o nounset
+set -euo pipefail
 
 # Variable definitions
 # ====================

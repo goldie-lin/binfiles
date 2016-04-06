@@ -9,8 +9,7 @@
 # References:
 #   [1] http://mywiki.wooledge.org/ArithmeticExpression
 
-set -e
-# Any subsequent commands which fail will cause the shell script to exit immediately
+set -euo pipefail
 
 # Variable definitions
 # ====================

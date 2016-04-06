@@ -3,8 +3,7 @@
 # Requirements: git, repo (Android git-repo)
 # Usage: Simply run `./update.sh`
 
-set -e
-# Any subsequent commands which fail will cause the shell script to exit immediately
+set -eo pipefail
 
 # Variable definitions
 # ====================
