@@ -50,6 +50,8 @@ down_search() {
   local -a subdirs=()
   local j=""
 
+  [[ ! -d "${path}" ]] &&  (echo >&2 "Error: '${path}' shall be a directory!" && return 1)
+
   while IFS= read -r -d $'\0' j; do
     subdirs[i++]="$j" # array indices are numeric context, will force arithmetic evaluation [1]
   done < <(find "${path}" -mindepth 1 -maxdepth 1 -type d -print0) # default find won't follow symlinks, unless "-L" option
@@ -73,11 +75,9 @@ down_search() {
 }
 
 main() {
-  if [[ -d "$1" ]]; then
-    down_search 0 "$1"
-  else
-    down_search 0 .
-  fi
+  local -r dest="${1:-"."}"
+
+  down_search 0 "${dest}"
 }
 
 main "$@"
