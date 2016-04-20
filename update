@@ -76,11 +76,13 @@ declare -rA git_pull_list=( \
 
 # repo init list: title, url
 declare -rA repo_init_list=( \
+  ["00 Android AOSP mirror"]="https://android.googlesource.com/mirror/manifest --mirror"
   ["01 Android AOSP working"]="https://android.googlesource.com/platform/manifest"
 )
 
 # repo sync list: title, path
 declare -rA repo_sync_list=( \
+  ["00 Android AOSP mirror"]="${HOME}/opt/android-aosp-mirror"
   ["01 Android AOSP working"]="${HOME}/opt/android-aosp"
 )
 
