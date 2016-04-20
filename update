@@ -76,12 +76,12 @@ declare -rA git_pull_list=( \
 
 # repo init list: title, url
 declare -rA repo_init_list=( \
-  ["Android (AOSP)"]="https://android.googlesource.com/platform/manifest"
+  ["01 Android AOSP working"]="https://android.googlesource.com/platform/manifest"
 )
 
 # repo sync list: title, path
 declare -rA repo_sync_list=( \
-  ["Android (AOSP)"]="${HOME}/opt/android-aosp"
+  ["01 Android AOSP working"]="${HOME}/opt/android-aosp"
 )
 
 # color code
