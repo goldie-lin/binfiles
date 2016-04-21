@@ -42,6 +42,7 @@ declare -rA git_clone_list=( \
   ["pcmanx"]="https://github.com/pcman-bbs/pcmanx.git"
   ["git-blame-someone-else"]="https://github.com/jayphelps/git-blame-someone-else.git"
   ["git-prebase"]="https://gist.github.com/5893d2d969ccb6b8341d.git"
+  ["git-standup"]="https://github.com/kamranahmedse/git-standup.git"
 )
 
 # git pull list: title, path
@@ -72,6 +73,7 @@ declare -rA git_pull_list=( \
   ["pcmanx"]="${HOME}/opt/pcmanx"
   ["git-blame-someone-else"]="${HOME}/opt/git-blame-someone-else"
   ["git-prebase"]="${HOME}/opt/git-prebase"
+  ["git-standup"]="${HOME}/opt/git-standup"
 )
 
 # repo init list: title, url
