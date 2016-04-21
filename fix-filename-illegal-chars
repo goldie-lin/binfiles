@@ -83,14 +83,15 @@ fix_files() {
 }
 
 main() {
-  if [[ -e "$1" ]]; then
-    if [[ -d "$1" ]]; then
-      fix_directories "$1"
+  local -r dest="${1:-"."}"
+
+  if [[ -e "${dest}" ]]; then
+    if [[ -d "${dest}" ]]; then
+      fix_directories "${dest}"
     fi
-    fix_files "$1"
+    fix_files "${dest}"
   else
-    fix_directories .
-    fix_files .
+    echo >&2 "Error: '${dest}' path not found!"
   fi
 }
 
