@@ -43,6 +43,7 @@ declare -rA git_clone_list=( \
   ["git-blame-someone-else"]="https://github.com/jayphelps/git-blame-someone-else.git"
   ["git-prebase"]="https://gist.github.com/5893d2d969ccb6b8341d.git"
   ["git-standup"]="https://github.com/kamranahmedse/git-standup.git"
+  ["completion-ruby"]="https://github.com/mernen/completion-ruby.git"
 )
 
 # git pull list: title, path
@@ -74,6 +75,7 @@ declare -rA git_pull_list=( \
   ["git-blame-someone-else"]="${HOME}/opt/git-blame-someone-else"
   ["git-prebase"]="${HOME}/opt/git-prebase"
   ["git-standup"]="${HOME}/opt/git-standup"
+  ["completion-ruby"]="${HOME}/opt/completion-ruby"
 )
 
 # repo init list: title, url
