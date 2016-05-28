@@ -21,7 +21,7 @@ main() {
   local -r html="${input}.html"
   #local -r odt="${html}.odt"
 
-  if [ ! -f "${input}" ]; then
+  if [[ ! -f "${input}" ]]; then
     echo "Usage: $0 <file>"
   else
     # Note: You can only use up to (max) 10 of "-c" commands in vim.
