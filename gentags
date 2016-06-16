@@ -13,13 +13,13 @@ set -euo pipefail
 # ====================
 
 # tags to be generated
-declare -ra tag_list=( "gtags" "ctags" ) # "cscope"
+declare -gra tag_list=( "gtags" "ctags" ) # "cscope"
 
 # filelist
-readonly file_list="cscope.files"
+declare -gr file_list="cscope.files"
 
 # required pkg list: executable, package name
-declare -rA req_pkgs=( \
+declare -grA req_pkgs=( \
   ["ctags"]="exuberant-ctags"
   ["cscope"]="cscope"
   ["gtags"]="global"

@@ -7,8 +7,8 @@ set -euo pipefail
 # Variable definitions
 # ====================
 
-readonly def_file="build/core/definitions.mk"
-readonly top_file="build/core/envsetup.mk"
+declare -gr def_file="build/core/definitions.mk"
+declare -gr top_file="build/core/envsetup.mk"
 
 # Function definitions
 # ====================

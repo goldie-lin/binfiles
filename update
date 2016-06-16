@@ -9,13 +9,13 @@ set -eo pipefail
 # ====================
 
 # command options
-readonly git_gc_enable="no" # yes or no
-declare -ra git_gc_opt=() # (empty) or --aggressive
-declare -ra git_pull_opt=()
-declare -ra repo_sync_opt=( -q -f )
+declare -gr git_gc_enable="no" # yes or no
+declare -gra git_gc_opt=() # (empty) or --aggressive
+declare -gra git_pull_opt=()
+declare -gra repo_sync_opt=( -q -f )
 
 # git clone list: title, url
-declare -rA git_clone_list=( \
+declare -grA git_clone_list=( \
   ["vimrc"]="https://github.com/goldie-lin/vimrc.git"
   ["dotfiles"]="https://github.com/goldie-lin/dotfiles.git"
   ["binfiles"]="https://github.com/goldie-lin/binfiles.git"
@@ -47,7 +47,7 @@ declare -rA git_clone_list=( \
 )
 
 # git pull list: title, path
-declare -rA git_pull_list=( \
+declare -grA git_pull_list=( \
   ["vimrc"]="${HOME}/opt/vimrc"
   ["dotfiles"]="${HOME}/opt/dotfiles"
   ["binfiles"]="${HOME}/opt/binfiles"
@@ -79,35 +79,35 @@ declare -rA git_pull_list=( \
 )
 
 # repo init list: title, url
-declare -rA repo_init_list=( \
+declare -grA repo_init_list=( \
   ["00 Android AOSP mirror"]="https://android.googlesource.com/mirror/manifest --mirror"
   ["01 Android AOSP working"]="https://android.googlesource.com/platform/manifest"
 )
 
 # repo sync list: title, path
-declare -rA repo_sync_list=( \
+declare -grA repo_sync_list=( \
   ["00 Android AOSP mirror"]="${HOME}/opt/android-aosp-mirror"
   ["01 Android AOSP working"]="${HOME}/opt/android-aosp"
 )
 
 # color code
-readonly cClean=$'\e[0m'
-readonly cBlack=$'\e[30m'
-readonly cDarkRed=$'\e[31m'
-readonly cDarkGreen=$'\e[32m'
-readonly cDarkYellow=$'\e[33m'
-readonly cDarkBlue=$'\e[34m'
-readonly cDarkPurple=$'\e[35m'
-readonly cDarkCyan=$'\e[36m'
-readonly cLightGray=$'\e[37m'
-readonly cGray=$'\e[30;1m'
-readonly cRed=$'\e[31;1m'
-readonly cGreen=$'\e[32;1m'
-readonly cYellow=$'\e[33;1m'
-readonly cBlue=$'\e[34;1m'
-readonly cPurple=$'\e[35;1m'
-readonly cCyan=$'\e[36;1m'
-readonly cWhite=$'\e[37;1m'
+declare -gr cClean=$'\e[0m'
+declare -gr cBlack=$'\e[30m'
+declare -gr cDarkRed=$'\e[31m'
+declare -gr cDarkGreen=$'\e[32m'
+declare -gr cDarkYellow=$'\e[33m'
+declare -gr cDarkBlue=$'\e[34m'
+declare -gr cDarkPurple=$'\e[35m'
+declare -gr cDarkCyan=$'\e[36m'
+declare -gr cLightGray=$'\e[37m'
+declare -gr cGray=$'\e[30;1m'
+declare -gr cRed=$'\e[31;1m'
+declare -gr cGreen=$'\e[32;1m'
+declare -gr cYellow=$'\e[33;1m'
+declare -gr cBlue=$'\e[34;1m'
+declare -gr cPurple=$'\e[35;1m'
+declare -gr cCyan=$'\e[36;1m'
+declare -gr cWhite=$'\e[37;1m'
 
 # Function definitions
 # ====================
