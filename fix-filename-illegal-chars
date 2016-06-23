@@ -15,7 +15,7 @@ set -euo pipefail
 # ====================
 
 # sed script
-if read -r -d '' sed_script << '_SED_SCRIPT_'
+read -r -d '' sed_script << '_SED_SCRIPT_' || true  # exit non-zero
 # replace the start of square bracket with a underline:
 s/\[/_/g
 # replace the end of square bracket with a underline:
@@ -37,7 +37,6 @@ s/^[-_]\+\(.\)/\1/
 # trim trailing underlines or dashes before file extension:
 s/[-_]\+\(\.[[:alnum:]]\{1,5\}\)$/\1/
 _SED_SCRIPT_
-then true; fi
 
 # Function definitions
 # ====================
