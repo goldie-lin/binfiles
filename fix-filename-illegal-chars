@@ -3,9 +3,16 @@
 # Description:
 #   Fix/Replace illegal characters in filename recursively in current directory,
 #   included all sub-directories.
+# Requirements:
+#   * find (findutils)
+#   * getopt (util-linux)
+#   * sed
 # Usage:
 #   Simply run `fix_filename_illegal_chars.sh` in the folder you want,
 #   or specific a file or a directory as first argument.
+# Options:
+#   -n, --dry-run: just print, e.g.,
+#       `fix_filename_illegal_chars.sh . -n`
 # References:
 #   [1] http://mywiki.wooledge.org/ArithmeticExpression
 
@@ -38,12 +45,17 @@ s/^[-_]\+\(.\)/\1/
 s/[-_]\+\(\.[[:alnum:]]\{1,5\}\)$/\1/
 _SED_SCRIPT_
 
+script_file="$(readlink -f "${BASH_SOURCE[0]}")" # Absolute path to this script
+#script_dir="$(dirname "${script_file}")"         # Absolute path this script is in
+script_name="$(basename "${script_file}")"       # Filename of this script
+
 # Function definitions
 # ====================
 
 fix_name() {
   local -r path="$1"
   local -r file_or_dir="$2"
+  local -ri dry_run="$3"
   local -a flist=()
   local -i i=0
   local j=""
@@ -66,31 +78,67 @@ fix_name() {
     name_org="$(basename "${flist[$i]}")"
     name_mod="$(echo "${name_org}" | sed -f <(echo -n "${sed_script}"))"
     if [[ "${name_org}" != "${name_mod}" ]]; then
-      mv -v "${path2}/${name_org}" "${path2}/${name_mod}"
+      if (( dry_run == 1 )); then
+        echo "rename: '${path2}/${name_org}' --> '${path2}/${name_mod}'"
+      else
+        mv -v "${path2}/${name_org}" "${path2}/${name_mod}"
+      fi
     fi
   done
 }
 
 fix_directories() {
   local -r path="$1"
-  fix_name "${path}" d
+  local -ri dry_run="$2"
+
+  fix_name "${path}" d "${dry_run}"
 }
 
 fix_files() {
   local -r path="$1"
-  fix_name "${path}" f
+  local -ri dry_run="$2"
+
+  fix_name "${path}" f "${dry_run}"
 }
 
 main() {
-  local -r dest="${1:-"."}"
+  local -r shortopts="n"
+  local -r longopts="dry-run"
+  local -i dry_run=0
+  local -i i=0
+  local path=""
+  local tmp=""
+  local j=""
 
-  if [[ -e "${dest}" ]]; then
-    if [[ -d "${dest}" ]]; then
-      fix_directories "${dest}"
+  # parse options
+  tmp="$(getopt -o "${shortopts}" -l "${longopts}" -n "${script_name}" --shell 'bash' -- "$@")"
+  [ $? -eq 0 ] || { echo >&2 "Error: getopt parsing error."; return 1 ; }
+  eval set -- "$tmp"
+  while true; do
+    case "$1" in
+      -n|--dry-run) dry_run=1; shift;;
+      --) shift; break;;
+      *) echo >&2 "Error: two-pass option parsing error."; return 2;;
+    esac
+  done
+
+  # get first file path
+  for path in "$@"; do
+    if [[ -d "${path}" || -f "${path}" ]]; then
+      break
     fi
-    fix_files "${dest}"
+  done
+
+  # default to current directory
+  path="${path:-"."}"
+
+  if [[ -e "${path}" ]]; then
+    if [[ -d "${path}" ]]; then
+      fix_directories "${path}" "${dry_run}"
+    fi
+    fix_files "${path}" "${dry_run}"
   else
-    echo >&2 "Error: '${dest}' path not found!"
+    echo >&2 "Error: '${path}' path not found."; return 3
   fi
 }
 
