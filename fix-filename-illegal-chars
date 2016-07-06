@@ -118,7 +118,7 @@ main() {
     case "$1" in
       -n|--dry-run) dry_run=1; shift;;
       --) shift; break;;
-      *) echo >&2 "Error: two-pass option parsing error."; return 2;;
+      *) echo >&2 "Error: args parsing error, unrecognized option: '$1'."; return 2;;
     esac
   done
 
