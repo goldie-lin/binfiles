@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+# Author: Goldie Lin
+# Description: Recursively chmod to reset file permission mode bits.
+# Requirements: findutils (find, xargs), coreutils (chmod).
+
+set -euo pipefail
+
+# Variable definitions
+# --------------------
+
+preset_exts=( sh pl py )
+append_exts=""
+ext_ere=""
+search_mode="undefined"
+find_exec_tail=""
+default_root="."
+dir_mode="755"
+file_mode="644"
+exe_mode="a+x"
+
+# Function definitions
+# --------------------
+
+main() {
+  # input more user-specific file extensions
+  read -r -p "Executables: [${preset_exts[*]}] (before). Add more? space-separated (eg: 'cmd exe') or just Enter to skip: " append_exts
+  preset_exts+=( ${append_exts} )
+  read -r -p "Executables: [${preset_exts[*]}] (after).  Ready to go? or Ctrl-C to abort. "
+
+  # construct POSIX-compatible egrep-variant ERE (extended regular expression) for find utility
+  # shellcheck disable=SC2086
+  printf -v ext_ere '%s|' ${preset_exts[*]}
+  ext_ere="${ext_ere%|}"
+
+  # select search mode
+  until [[ "${search_mode}" =~ ^[sfo]$ ]]; do
+    read -r -p "Search in Slow, Fast, or Old-style fast mode? [s/F/o]: " search_mode
+    search_mode="${search_mode:-f}"  # default fast mode
+    search_mode="${search_mode,,}"  # lowercase all chars
+  done
+
+  # find and chmod by search mode
+  case "${search_mode}" in
+    s|f)
+      case "${search_mode}" in
+        s) find_exec_tail=";";;
+        f) find_exec_tail="+";;
+      esac
+      # shellcheck disable=SC2067
+      find "${default_root}" -type d -exec chmod "${dir_mode}" '{}' "${find_exec_tail}"
+      # shellcheck disable=SC2067
+      find "${default_root}" -type f -exec chmod "${file_mode}" '{}' "${find_exec_tail}"
+      # shellcheck disable=SC2067
+      find "${default_root}" -regextype 'posix-egrep' -type f -iregex "^.*\\.($ext_ere)$" -exec chmod "${exe_mode}" '{}' "${find_exec_tail}"
+      ;;
+    o)
+      find "${default_root}" -type d -print0 | xargs -0 --no-run-if-empty chmod "${dir_mode}"
+      find "${default_root}" -type f -print0 | xargs -0 --no-run-if-empty chmod "${file_mode}"
+      find "${default_root}" -regextype 'posix-egrep' -type f -iregex "^.*\\.($ext_ere)$" -print0 | xargs -0 --no-run-if-empty chmod "${exe_mode}"
+      ;;
+    *)
+      echo >&2 "Error: unexpected search mode: '${search_mode}'!"
+      return 1
+      ;;
+  esac
+}
+
+main "$@"
