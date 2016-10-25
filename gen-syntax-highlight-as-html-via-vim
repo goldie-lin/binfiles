@@ -1,15 +1,18 @@
 #!/usr/bin/env bash
 # Author: Goldie Lin
-# Description: Convert source text to HTML with syntax color code.
-# Requirements: vim, libreoffice.
+# Description: Convert source code to HTML with syntax highlighting.
+# Requirements:
+#   * vim
+#   * libreoffice (optional)
 # Usage:
-#   vim-convert-syntax-to-html <file>
-#   Then, you can use libreoffice to open this html file,
-#   and copy contains with color code to other program.
+#   $ gen-syntax-highlight-as-html-via-vim <file>
+#     It'll generated a new <file.html> with syntax highlighting of the input
+#     source code.  Then, you can use LibreOffice to open this <file.html>, and
+#     copy contain to other program. (e.g., AbiWord, LibreOffice Impress.)
 
 # References:
-# * http://vi.stackexchange.com/questions/792/how-to-convert-a-source-code-file-into-html
-# * http://askubuntu.com/questions/60778/how-can-i-convert-an-odt-file-to-a-pdf
+#   * http://vi.stackexchange.com/questions/792/how-to-convert-a-source-code-file-into-html
+#   * http://askubuntu.com/questions/60778/how-can-i-convert-an-odt-file-to-a-pdf
 
 set -euo pipefail
 
