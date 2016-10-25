@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+# Author: Goldie Lin
+# Description: Convert source code to RTF with syntax highlighting.
+# Requirements:
+#   * pygmentize (python script)
+#   * python-pygments (python library)
+#   * libreoffice (optional)
+#   * abiword (optional)
+# Usage:
+#   $ gen-syntax-highlight-as-rtf-via-pygmentize <file>
+#     It'll generated a new <file.rtf> with syntax highlighting of the input
+#     source code.  Then, you can use LibreOffice or AbiWord to open this
+#     <file.rtf>, and copy contain to other program. (e.g., LibreOffice
+#     Impress, LibreOffice Writter, or another AbiWord.)
+#   $ pygmentize -L styles
+#     Show more avaiable styles supported by pygments.
+
+# References:
+#   * https://blog.gslin.org/archives/2016/10/22/6930/%E5%B0%8D%E6%8A%95%E5%BD%B1%E7%89%87%E7%9A%84%E7%A8%8B%E5%BC%8F%E7%A2%BC%E5%8A%A0%E4%B8%8A%E8%89%B2%E5%BD%A9/
+#   * https://evertpot.com/syntax-highlighting-in-presentations/
+#   * http://pygments.org/docs/cmdline/
+
+set -euo pipefail
+
+# Variable definitions
+# ====================
+
+# Light themes:
+#   default, paraiso-light, xcode, vs, autumn, colorful, emacs, tango,
+#   friendly, manni, pastie, perldoc.
+# Dark themes:
+#   native, paraiso-dark, vim, monokai, fruity, igor, rrt.
+pygments_opt="style=xcode"  # styles I preferred are: xcode, emacs.
+
+# Function definitions
+# ====================
+
+main() {
+  local -r input="$(readlink -f "$1")"
+  local -r rtf="${input}.rtf"
+
+  if [[ ! -f "${input}" ]]; then
+    echo "Usage: $0 <file>"
+  else
+    # pass the rest of arguments to pygmentize.
+    shift
+    if (( $# )); then
+      pygmentize "$@" -O "${pygments_opt}" -f "rtf" -o "${rtf}" "${input}"
+    else
+      pygmentize -O "${pygments_opt}" -f "rtf" -o "${rtf}" "${input}"
+    fi
+  fi
+}
+
+main "$@"
