@@ -2,7 +2,7 @@
 # Author: Goldie Lin
 # Description: Generate tag files for source code browsering.
 # Requirements:
-#   * ctags (exuberant-ctags)
+#   * ctags (exuberant-ctags, or universal-ctags)
 #   * cscope
 #   * gtags (global)
 # Usage: cd to codebase root directory, then run this script.
