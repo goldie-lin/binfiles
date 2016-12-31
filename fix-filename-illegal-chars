@@ -112,6 +112,7 @@ main() {
 
   # parse options
   tmp="$(getopt -o "${shortopts}" -l "${longopts}" -n "${script_name}" -s 'bash' -- "$@")"
+  # shellcheck disable=SC2181
   [ $? -eq 0 ] || { echo >&2 "Error: getopt parsing error."; return 1; }
   eval set -- "$tmp"
   while true; do
