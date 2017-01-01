@@ -228,6 +228,10 @@ do_repo_sync_list() {
   local _path=""
   local _url=""
 
+  if [[ -f ./venv/bin/activate && -r ./venv/bin/activate ]]; then
+    source ./venv/bin/activate
+  fi
+
   for _title in "${!repo_sync_list[@]}"; do
     _path="${repo_sync_list[$_title]}"
     _url="${repo_init_list[$_title]}"
