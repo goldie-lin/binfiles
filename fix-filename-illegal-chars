@@ -81,7 +81,7 @@ fix_name() {
       if (( dry_run == 1 )); then
         echo "rename: '${path2}/${name_org}' --> '${path2}/${name_mod}'"
       else
-        mv -v "${path2}/${name_org}" "${path2}/${name_mod}"
+        mv -v -- "${path2}/${name_org}" "${path2}/${name_mod}"
       fi
     fi
   done

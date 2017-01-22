@@ -173,7 +173,7 @@ git_clone() {
   local -r _url="$1"
   local -r _path="$2"
 
-  git clone "${_url}" "${_path}"
+  git clone -- "${_url}" "${_path}"
   git -C "${_path}" config --unset branch.master.rebase
 }
 
@@ -192,9 +192,8 @@ repo_init() {
   local -r _repo="$(which repo)"
   local -r _python="$(_get_python_variant_for_repo)"
 
-  mkdir -p "${_path}"
-  cd "${_path}"
-  "${_python}" "${_repo}" init -u "${_url}"
+  mkdir -p -- "${_path}"
+  (cd -- "${_path}" && "${_python}" "${_repo}" init -u "${_url}")
 }
 
 repo_sync() {
@@ -202,8 +201,7 @@ repo_sync() {
   local -r _repo="$(which repo)"
   local -r _python="$(_get_python_variant_for_repo)"
 
-  cd "${_path}"
-  "${_python}" "${_repo}" sync "${repo_sync_opt[@]}"
+  (cd -- "${_path}" && "${_python}" "${_repo}" sync "${repo_sync_opt[@]}")
 }
 
 do_git_pull_list() {

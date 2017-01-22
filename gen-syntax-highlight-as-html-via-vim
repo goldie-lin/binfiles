@@ -38,7 +38,7 @@ main() {
       -c "let g:html_use_css=1" \
       -c "let g:html_ignore_conceal=1 | setlocal conceallevel=0" \
       -c "runtime! syntax/2html.vim | w ${html} | q | q" \
-      "${input}" || true
+      -- "${input}" || true
     #libreoffice --headless --convert-to odt "${html}"
   fi
 }
