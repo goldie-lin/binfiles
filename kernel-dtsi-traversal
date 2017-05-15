@@ -1,9 +1,17 @@
 #!/usr/bin/env bash
 # Author: Goldie Lin
-# Description: Traversal of all *included* DTSI for a specific Linux kernel DTS.
-# Usage: cd /path/to/dts && run ./kernel-dtsi-traversal <filename.dts>
+# Description: Traversal of all *included* DTSI/H for a specific Linux kernel DTS/DTSI.
+# Usage: kernel-dtsi-traversal <dts/dtsi-file>
+# Requirement: Git-controlled kernel source tree, i.e., has a ".git" folder in the project root.
 
 set -euo pipefail
+
+# variable definitions
+# ====================
+
+declare -g git_dir=""
+declare -g dt_bindings_inc_dir=""  # "dt-bindings".
+declare -g indent_chars="  "  # one indent = two space.
 
 # Function definitions
 # ====================
@@ -13,38 +21,74 @@ expand_lvl_to_indents() {
   local -i i=0
 
   for ((i=0; i<lvl; i++)); do
-    echo -n "  "  # one indent = two space.
+    echo -n "${indent_chars}"
   done
 }
 
 # down search recursively, likes dfs.
 down_search() {
   local -r lvl="$1"
-  local -r parent="$2"
+  local -r type="$2"
+  local -r parent="$3"
+  local parent_name=""
+  local parent_dir=""
   local -i i=0
-  local -a children=()
+  local -a siblings=()
+  local -a bindings=()
   local j=""
 
-  [[ ! -f "${parent}" ]] &&  (echo >&2 "Error: '${parent}' does not existed!" && return 1)
+  [[ -f "${parent}" ]] || (echo >&2 "Error: '${parent}' does not existed!" && return 1)
 
+  parent_name="$(basename "${parent}")"
+  parent_dir="$(readlink -f "$(dirname "${parent}")")"
+
+  # pattern: include "..."
   while IFS= read -r j; do
-    children[i++]="$j" # array indices are numeric context, will force arithmetic evaluation [1]
-  done < <(grep -P '^\s*(#include)\s+' "${parent}" | grep -Po '(?<=")([^"]+)(?=")')
+    siblings[i++]="$j"
+  done < <(grep -P '^\s*(#include|\/include\/)\s+' "${parent}" | grep -Po '(?<=["])([^"]+)(?=["])')
 
-  if [[ "${#children[@]}" -gt 0 ]]; then
-    echo "$(expand_lvl_to_indents "$lvl")* ${parent}"  # (${#children[@]})"
-    for ((i=0; i<${#children[@]}; i++)); do
-      down_search "$(( lvl+1 ))" "${children[$i]}"
+  # pattern: include <...>
+  while IFS= read -r j; do
+    bindings[i++]="$j"
+  done < <(grep -P '^\s*(#include|\/include\/)\s+' "${parent}" | grep -Po '(?<=[/<])([^<>]+)(?=[/>])')
+
+  # show myself.
+  if [[ "${type}" -eq 2 ]]; then
+    echo "$(expand_lvl_to_indents "$lvl")* <${parent_name}>"
+  else  # default: 1
+    echo "$(expand_lvl_to_indents "$lvl")* \"${parent_name}\""
+  fi
+
+  # recursively search.
+  if [[ "${#siblings[@]}" -gt 0 ]]; then
+    for ((i=0; i<${#siblings[@]}; i++)); do
+      down_search "$(( lvl+1 ))" 1 "${parent_dir}/${siblings[$i]}"
     done
-  else
-    echo "$(expand_lvl_to_indents "$lvl")* ${parent}"
+  elif [[ "${#bindings[@]}" -gt 0 ]]; then
+    for ((i=0; i<${#bindings[@]}; i++)); do
+      down_search "$(( lvl+1 ))" 2 "${dt_bindings_inc_dir}/${bindings[$i]}"
+    done
   fi
 }
 
 main() {
-  local -r dest="$1"
+  local type="1"
+  local parent="$1"
+  local parent_name=""
+  local parent_dir=""
 
-  down_search 0 "${dest}"
+  [[ -f "${parent}" ]] || (echo >&2 "Error: '${parent}' does not existed!" && return 2)
+  [[ "${parent##*.}" =~ dts|dtsi ]] || (echo >&2 "Error: '${parent}' not a dts/dtsi file!" && return 3)
+
+  parent="$(readlink -f "${parent}")"  # relocate myself.
+  parent_name="$(basename "${parent}")"
+  parent_dir="$(readlink -f "$(dirname "${parent}")")"
+
+  # setup global vars
+  git_dir="$(git -C "${parent_dir}" rev-parse --show-toplevel)"
+  dt_bindings_inc_dir="${git_dir}/include"
+
+  down_search 0 "${type}" "${parent}"
 }
 
 main "$@"
