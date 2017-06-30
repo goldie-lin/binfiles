@@ -27,11 +27,12 @@ expand_lvl_to_indents() {
 
 # down search recursively, likes dfs.
 down_search() {
-  local -r lvl="$1"
-  local -r type="$2"
+  local -ri lvl="$1"
+  local -ri type="$2"
   local -r parent="$3"
   local parent_name=""
   local parent_dir=""
+  local -i child_type=1
   local -i i=0
   local -a siblings=()
   local -a bindings=()
@@ -61,34 +62,37 @@ down_search() {
 
   # recursively search.
   if [[ "${#siblings[@]}" -gt 0 ]]; then
+    child_type=1
     for ((i=0; i<${#siblings[@]}; i++)); do
-      down_search "$(( lvl+1 ))" 1 "${parent_dir}/${siblings[$i]}"
+      down_search "$(( lvl+1 ))" "${child_type}" "${parent_dir}/${siblings[$i]}"
     done
   elif [[ "${#bindings[@]}" -gt 0 ]]; then
+    child_type=2
     for ((i=0; i<${#bindings[@]}; i++)); do
-      down_search "$(( lvl+1 ))" 2 "${dt_bindings_inc_dir}/${bindings[$i]}"
+      down_search "$(( lvl+1 ))" "${child_type}" "${dt_bindings_inc_dir}/${bindings[$i]}"
     done
   fi
 }
 
 main() {
-  local type="1"
+  local -i lvl=0
+  local -i type=1
   local parent="$1"
   local parent_name=""
   local parent_dir=""
 
   [[ -f "${parent}" ]] || (echo >&2 "Error: '${parent}' does not existed!" && return 2)
-  [[ "${parent##*.}" =~ dts|dtsi ]] || (echo >&2 "Error: '${parent}' not a dts/dtsi file!" && return 3)
+  [[ "${parent##*.}" =~ ^(dts|dtsi)$ ]] || (echo >&2 "Error: '${parent}' not a dts/dtsi file!" && return 3)
 
   parent="$(readlink -f "${parent}")"  # relocate myself.
   parent_name="$(basename "${parent}")"
   parent_dir="$(readlink -f "$(dirname "${parent}")")"
 
-  # setup global vars
+  # setup global vars.
   git_dir="$(git -C "${parent_dir}" rev-parse --show-toplevel)"
   dt_bindings_inc_dir="${git_dir}/include"
 
-  down_search 0 "${type}" "${parent}"
+  down_search "${lvl}" "${type}" "${parent}"
 }
 
 main "$@"
