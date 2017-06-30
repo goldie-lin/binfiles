@@ -1,0 +1,167 @@
+#!/usr/bin/env bash
+# Author: Goldie Lin
+# Description: Clone a specific tree of kernel devicetree with specific filename prefix.
+# Usage: kernel-devicetree-clone <dts> <prefix>
+
+set -euo pipefail
+
+# variable definitions
+# ====================
+
+declare -g indent_chars="  "  # one indent = two space.
+
+# Function definitions
+# ====================
+
+print_warning_msg() {
+  local cClean=$'\e[0m'
+  local cRed=$'\e[31;1m'
+  local cYellow=$'\e[33;1m'
+
+  cat << _WARNING_MSG_
+
+${cRed}Warning${cClean}: Please don't forget to remove unnecessary dtsi files:
+  * "${cYellow}skeleton*.dtsi${cClean}": Skeleton devicetree.
+  * "${cYellow}dsi-panel-*.dtsi${cClean}": Display panel devicetree.
+  * "${cYellow}fg-*.dtsi${cClean}": Fuel gauge battery data devicetree.
+  * "${cYellow}*-batterydata-*.dtsi${cClean}": Fuel gauge battery data devicetree.
+  * There are maybe more unwanted data cloned, to be check...
+And, don't forget to change your board-id/platform-id/subtype-id.
+_WARNING_MSG_
+}
+
+expand_lvl_to_indents() {
+  local -i lvl="$1"
+  local -i i=0
+
+  for ((i=0; i<lvl; i++)); do
+    echo -n "${indent_chars}"
+  done
+}
+
+# down search recursively, likes dfs.
+down_search() {
+  local -ri lvl="$1"
+  local -ri type="$2"
+  local -r parent="$3"
+  local -r prefix="$4"
+  local parent_name=""
+  local parent_dir=""
+  local parent_origin_name=""
+  local parent_origin_ext=""
+  local parent_clone_name=""
+  local parent_clone_ext=""
+  local parent_clone_fullname=""
+  local is_parent_clone_existed="false"
+  local -i child_type=1
+  local -i i=0
+  local -a siblings=()
+  local sibling=""
+  local sibling_escaped=""
+  local sibling_origin_name=""
+  local sibling_origin_ext=""
+  local sibling_clone_name=""
+  local sibling_clone_ext=""
+  local sibling_clone_name_escaped=""
+  local sibling_clone_ext_escaped=""
+  local j=""
+
+  [[ -f "${parent}" ]] || (echo >&2 "Error: '${parent}' does not existed!" && return 1)
+
+  parent_name="$(basename "${parent}")"
+  parent_dir="$(readlink -f "$(dirname "${parent}")")"
+  parent_origin_name="${parent_name%.*}"
+  parent_origin_ext="${parent_name##*.}"
+  parent_clone_name="${prefix}${parent_origin_name}"  # prepend the prefix to the filename.
+  parent_clone_ext="${parent_origin_ext}"
+  parent_clone_fullname="${parent_clone_name}.${parent_clone_ext}"
+
+  # pattern: include "..."
+  while IFS= read -r j; do
+    siblings[i++]="$j"
+  done < <(grep -P '^\s*(#include|\/include\/)\s+' "${parent}" | grep -Po '(?<=["])([^"]+)(?=["])')
+
+  [[ ! -f "${parent_dir}/${parent_clone_name}.${parent_clone_ext}" ]] || is_parent_clone_existed="true"
+
+  # clone myself.
+  if [[ "${type}" -eq 1
+        && "${parent_origin_ext}" =~ ^(dts|dtsi)$
+        && ! "${parent_origin_name}" =~ ^(skeleton|dsi-panel-|fg-|.*-batterydata-).*
+        && "${is_parent_clone_existed}" == "false" ]]; then
+    cp -i -- \
+      "${parent_dir}/${parent_origin_name}.${parent_origin_ext}" \
+      "${parent_dir}/${parent_clone_name}.${parent_clone_ext}"
+  fi
+
+  # update myself.
+  if [[ "${type}" -eq 1
+        && "${parent_origin_ext}" =~ ^(dts|dtsi)$
+        && "${is_parent_clone_existed}" == "false"
+        && "${#siblings[@]}" -gt 0 ]]; then
+    for ((i=0; i<${#siblings[@]}; i++)); do
+      sibling="${siblings[$i]}"
+      sibling_origin_name="${sibling%.*}"
+      sibling_origin_ext="${sibling##*.}"
+      sibling_clone_name="${prefix}${sibling_origin_name}"  # prepend the prefix to the filename.
+      sibling_clone_ext="${sibling_origin_ext}"
+      if [[ "${sibling_origin_ext}" =~ ^(dtsi)$
+            && ! "${sibling_origin_name}" =~ ^(skeleton|dsi-panel-|fg-|.*-batterydata-).* ]]; then
+        # escape self as a literal string against regular expresion.
+        sibling_escaped="${siblings[$i]}"
+        sibling_clone_name_escaped="$(printf '%q' "${sibling_clone_name}")"
+        sibling_clone_ext_escaped="$(printf '%q' "${sibling_clone_ext}")"
+        # update content.
+        sed -i --follow-symlinks \
+          "/^\\s*\\(#include\\|\/include\/\\)\\s\\+\"${sibling_escaped}\"/s;\"${sibling_escaped}\";\"${sibling_clone_name_escaped}.${sibling_clone_ext_escaped}\";" \
+          -- "${parent_dir}/${parent_clone_name}.${parent_clone_ext}"
+      fi
+    done
+  fi
+
+  # show myself.
+  if [[ "${type}" -eq 2 ]]; then
+    echo "$(expand_lvl_to_indents "$lvl")* <${parent_name}>"
+  else  # default: 1
+    if [[ "${type}" -eq 1
+          && "${parent_origin_ext}" =~ ^(dts|dtsi)$
+          && ! "${parent_origin_name}" =~ ^(skeleton|dsi-panel-|fg-|.*-batterydata-).* ]]; then
+      if [[ "${is_parent_clone_existed}" == "false" ]]; then
+        echo "$(expand_lvl_to_indents "$lvl")* \"${parent_name}\" --> \"${parent_clone_fullname}\""
+      else
+        echo "$(expand_lvl_to_indents "$lvl")* \"${parent_name}\" --> \"${parent_clone_fullname}\" (already existed)"
+      fi
+    else
+      echo "$(expand_lvl_to_indents "$lvl")* \"${parent_name}\""
+    fi
+  fi
+
+  # recursively search.
+  if [[ "${#siblings[@]}" -gt 0 ]]; then
+    child_type=1
+    for ((i=0; i<${#siblings[@]}; i++)); do
+      down_search "$(( lvl+1 ))" "${child_type}" "${parent_dir}/${siblings[$i]}" "${prefix}"
+    done
+  fi
+}
+
+main() {
+  local -i lvl=0
+  local -i type=1
+  local parent="${1:-}"
+  local prefix="${2:-0}"
+  local parent_name=""
+  local parent_dir=""
+
+  [[ -f "${parent}" ]] || (echo >&2 "Error: '${parent}' does not existed!" && return 2)
+  [[ "${parent##*.}" =~ ^(dts)$ ]] || (echo >&2 "Error: '${parent}' not a dts file!" && return 3)
+  [[ "${prefix}" =~ ^([a-zA-Z])([a-zA-Z0-9]*)([-])$ ]] || (echo >&2 $'Error: invalid "${prefix}"!\nE.g., "projectname-"' && return 4)
+
+  parent="$(readlink -f "${parent}")"  # relocate myself.
+  parent_name="$(basename "${parent}")"
+  parent_dir="$(readlink -f "$(dirname "${parent}")")"
+
+  down_search "${lvl}" "${type}" "${parent}" "${prefix}"
+  print_warning_msg
+}
+
+main "$@"
