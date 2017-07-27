@@ -120,7 +120,7 @@ _get_linux_distro_name() {
   local -r _os="$(uname -s)"
 
   if [[ "${_os}" = "Linux" ]]; then
-    if hash "lsb_release " 2>/dev/null; then
+    if hash "lsb_release" 2>/dev/null; then
       lsb_release -s -i
     elif [[ -r /etc/lsb-release ]]; then
       ( source /etc/lsb-release && echo "$DISTRIB_ID")
