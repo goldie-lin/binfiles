@@ -57,13 +57,13 @@ down_search() {
   local -i i=0
   local -a siblings=()
   local sibling=""
-  local sibling_escaped=""
+  local sibling_unescaped=""
   local sibling_origin_name=""
   local sibling_origin_ext=""
   local sibling_clone_name=""
   local sibling_clone_ext=""
-  local sibling_clone_name_escaped=""
-  local sibling_clone_ext_escaped=""
+  local sibling_clone_name_unescaped=""
+  local sibling_clone_ext_unescaped=""
   local j=""
 
   [[ -f "${parent}" ]] || (echo >&2 "Error: '${parent}' does not existed!" && return 1)
@@ -106,13 +106,13 @@ down_search() {
       sibling_clone_ext="${sibling_origin_ext}"
       if [[ "${sibling_origin_ext}" =~ ^(dtsi)$
             && ! "${sibling_origin_name}" =~ ^(skeleton|dsi-panel-|fg-|.*-batterydata-).* ]]; then
-        # escape self as a literal string against regular expresion.
-        sibling_escaped="${siblings[$i]}"
-        sibling_clone_name_escaped="$(printf '%q' "${sibling_clone_name}")"
-        sibling_clone_ext_escaped="$(printf '%q' "${sibling_clone_ext}")"
+        # un-escape self as a literal string against regular expresion.
+        sibling_unescaped="${siblings[$i]}"
+        sibling_clone_name_unescaped="$(printf '%q' "${sibling_clone_name}")"
+        sibling_clone_ext_unescaped="$(printf '%q' "${sibling_clone_ext}")"
         # update content.
         sed -i --follow-symlinks \
-          "/^\\s*\\(#include\\|\/include\/\\)\\s\\+\"${sibling_escaped}\"/s;\"${sibling_escaped}\";\"${sibling_clone_name_escaped}.${sibling_clone_ext_escaped}\";" \
+          "/^\\s*\\(#include\\|\/include\/\\)\\s\\+\"${sibling_unescaped}\"/s;\"${sibling_unescaped}\";\"${sibling_clone_name_unescaped}.${sibling_clone_ext_unescaped}\";" \
           -- "${parent_dir}/${parent_clone_name}.${parent_clone_ext}"
       fi
     done
