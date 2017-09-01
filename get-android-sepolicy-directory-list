@@ -8,12 +8,13 @@ set -euo pipefail
 # ====================
 
 declare -gr top_file="build/core/envsetup.mk"
+declare -gr top_file2="build/make/core/envsetup.mk"
 
 # Function definitions
 # ====================
 
 check_pwd() {
-  if [[ ! -f "${top_file}" ]]; then
+  if [[ ! -f "${top_file}" && ! -f "${top_file2}" ]]; then
     echo >&2 "Error: Please cd to Android root and run again."
     return 1
   fi

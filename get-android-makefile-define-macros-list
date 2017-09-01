@@ -8,13 +8,15 @@ set -euo pipefail
 # ====================
 
 declare -gr def_file="build/core/definitions.mk"
+declare -gr def_file2="build/make/core/definitions.mk"
 declare -gr top_file="build/core/envsetup.mk"
+declare -gr top_file2="build/make/core/envsetup.mk"
 
 # Function definitions
 # ====================
 
 check_pwd() {
-  if [[ ! -f "${top_file}" ]]; then
+  if [[ ! -f "${top_file}" && ! -f "${top_file2}" ]]; then
     echo >&2 "Error: Please cd to Android root and run again."
     return 1
   fi
@@ -23,7 +25,11 @@ check_pwd() {
 gen_def_list() {
   local def_list=""
 
-  def_list="$(grep '^define' "${def_file}" | cut -d' ' -f2- | sort -u)"
+  if [[ -f "${def_file}" ]]; then
+    def_list="$(grep '^define' "${def_file}" | cut -d' ' -f2- | sort -u)"
+  elif [[ -f "${def_file2}" ]]; then
+    def_list="$(grep '^define' "${def_file2}" | cut -d' ' -f2- | sort -u)"
+  fi
   echo "${def_list}"
 }
 
