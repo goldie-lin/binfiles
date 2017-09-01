@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+# Author: Goldie Lin
+# Usage: cd to Android root and run this script.
+
+set -euo pipefail
+
+# Variable definitions
+# ====================
+
+declare -gr top_file="build/core/envsetup.mk"
+
+# Function definitions
+# ====================
+
+check_pwd() {
+  if [[ ! -f "${top_file}" ]]; then
+    echo >&2 "Error: Please cd to Android root and run again."
+    return 1
+  fi
+}
+
+gen_list() {
+  # type `find -regextype help` to get supported regextypes in findutils.
+  find . -regextype posix-egrep \
+    \( -regex '^.*\/\.git(|\/.*)$' \
+    -o -regex '^.*\/\.repo(|\/.*)$' \
+    -o -regex '^.*\/\.svn(|\/.*)$' \
+    -o -regex '^.*\/\.bzr(|\/.*)$' \
+    -o -regex '^.*\/\.hg(|\/.*)$' \
+    -o -regex '^\.\/out(|\/.*)$' \
+    -o -regex '^\.\/docs(|\/.*)$' \
+    -o -regex '^\.\/sdk(|\/.*)$' \
+    -o -regex '^\.\/ndk(|\/.*)$' \
+    -o -regex '^\.\/gdk(|\/.*)$' \
+    -o -regex '^\.\/pdk(|\/.*)$' \
+    -o -regex '^\.\/prebuilt(|\/.*)$' \
+    -o -regex '^\.\/prebuilts(|\/.*)$' \
+    -o -regex '^\.\/developers(|\/.*)$' \
+    -o -regex '^\.\/development(|\/.*)$' \
+    \) -prune -o \
+    -type f -iregex \
+    '^.*\/Android.bp$' \
+    -print
+}
+
+main() {
+  check_pwd
+  gen_list
+}
+
+main "$@"
