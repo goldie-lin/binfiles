@@ -154,7 +154,7 @@ main() {
 
   [[ -f "${parent}" ]] || (echo >&2 "Error: '${parent}' does not existed!" && return 2)
   [[ "${parent##*.}" =~ ^(dts)$ ]] || (echo >&2 "Error: '${parent}' not a dts file!" && return 3)
-  [[ "${prefix}" =~ ^([a-zA-Z])([a-zA-Z0-9]*)([-])$ ]] || (echo >&2 $'Error: invalid "${prefix}"!\nE.g., "projectname-"' && return 4)
+  [[ "${prefix}" =~ ^([a-zA-Z])([a-zA-Z0-9]*)([-])$ ]] || (echo -e >&2 "Error: invalid prefix: \"${prefix}\"\nE.g., \"projectname-\"" && return 4)
 
   parent="$(readlink -f "${parent}")"  # relocate myself.
   parent_name="$(basename "${parent}")"
