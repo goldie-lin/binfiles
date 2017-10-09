@@ -22,7 +22,7 @@ set -euo pipefail
 # ====================
 
 # sed script
-read -r -d '' sed_script << '_SED_SCRIPT_' || true  # exit non-zero
+IFS= read -r -d '' sed_script << '_SED_SCRIPT_' || true  # exit non-zero
 # replace the start of square bracket with a underline:
 s/\[/_/g
 # replace the end of square bracket with a underline:
