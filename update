@@ -120,7 +120,7 @@ _get_linux_distro_name() {
   local -r _os="$(uname -s)"
 
   if [[ "${_os}" = "Linux" ]]; then
-    if hash "lsb_release" 2>/dev/null; then
+    if hash "lsb_release" &>/dev/null; then
       lsb_release -s -i
     elif [[ -r /etc/lsb-release ]]; then
       ( source /etc/lsb-release && echo "$DISTRIB_ID")
@@ -157,9 +157,9 @@ _get_python_variant_for_repo() {
   # TODO: Maybe need to update this version check in the future.
   _python_version="$(python -V |& sed 's/Python//g;s/\s\+//g')"
   if [[ ! "${_python_version}" =~ ^2\.(6|7)\..*$ ]]; then
-    if hash "python2.7" 2>/dev/null; then
+    if hash "python2.7" &>/dev/null; then
       _python="python2.7"
-    elif hash "python2.6" 2>/dev/null; then
+    elif hash "python2.6" &>/dev/null; then
       _python="python2.6"
     else
       echo >&2 "Unaccepted version of $(python -V) for repo utility"
@@ -260,10 +260,10 @@ do_update_sys_pkgs() {
 
   case "${_distro}" in
   "Arch")
-    if hash "yaourt" 2>/dev/null; then
+    if hash "yaourt" &>/dev/null; then
       echo_title "yaourt"
       yaourt -Syua
-    elif hash "pacaur" 2>/dev/null; then
+    elif hash "pacaur" &>/dev/null; then
       echo_title "pacaur"
       pacaur -Syu
     else
