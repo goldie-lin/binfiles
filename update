@@ -117,7 +117,9 @@ echo_title() {
 }
 
 _get_linux_distro_name() {
-  local -r _os="$(uname -s)"
+  local _os=""
+
+  _os="$(uname -s)"
 
   if [[ "${_os}" = "Linux" ]]; then
     if hash "lsb_release" &>/dev/null; then
@@ -191,8 +193,11 @@ git_pull() {
 repo_init() {
   local -r _path="$1"
   local -r _url="$2"
-  local -r _repo="$(which repo)"
-  local -r _python="$(_get_python_variant_for_repo)"
+  local _repo=""
+  local _python=""
+
+  _repo="$(which repo)"
+  _python="$(_get_python_variant_for_repo)"
 
   mkdir -p -- "${_path}"
   (cd -- "${_path}" && "${_python}" "${_repo}" init -u "${_url}")
@@ -200,8 +205,11 @@ repo_init() {
 
 repo_sync() {
   local -r _path="$1"
-  local -r _repo="$(which repo)"
-  local -r _python="$(_get_python_variant_for_repo)"
+  local _repo=""
+  local _python=""
+
+  _repo="$(which repo)"
+  _python="$(_get_python_variant_for_repo)"
 
   (cd -- "${_path}" && "${_python}" "${_repo}" sync "${repo_sync_opt[@]}")
 }
@@ -256,7 +264,9 @@ do_update_nvim_plugins() {
 }
 
 do_update_sys_pkgs() {
-  local -r _distro="$(_get_linux_distro_name)"
+  local _distro=""
+
+  _distro="$(_get_linux_distro_name)"
 
   case "${_distro}" in
   "Arch")
