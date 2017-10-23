@@ -12,7 +12,7 @@ set -eo pipefail
 declare -gr git_gc_enable="no" # yes or no
 declare -gra git_gc_opt=() # (empty) or --aggressive
 declare -gra git_pull_opt=()
-declare -gra repo_sync_opt=( -q -f )
+declare -gra repo_sync_opt=( -q -f --prune )
 
 # git clone list: title, url
 declare -grA git_clone_list=( \
