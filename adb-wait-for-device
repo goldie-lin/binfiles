@@ -1,0 +1,83 @@
+#!/usr/bin/env bash
+# Author: Goldie Lin
+# Description:
+#   The "adb wait-for-device" variant command, using polling method to wait for
+#   non-first boot and first boot + disk encryption two cases, after doing
+#   factory reset or ROM image re-download.
+# Usage:
+#   adb-wait-for-device [-s ADB_DEVICE_SERIAL_NO]
+
+# note: no need.
+#set -e
+
+# Variable definitions
+# ====================
+
+declare -ir adb_polling_interval_secs=1
+
+# Function definitions
+# ====================
+
+adb_wait_for_device() {
+  # options:
+  #   -s ADB_DEVICE_SERIAL_NO
+
+  local OPTARG OPTIND optchar
+  local sn_opt sn
+
+  while getopts ":s:" optchar; do
+    case "${optchar}" in
+      s) sn_opt="-s ${OPTARG}"; sn="${OPTARG}";;
+    esac
+  done
+
+  # shellcheck disable=SC2086
+  adb ${sn_opt} wait-for-device
+
+  # shellcheck disable=SC2086
+  while [[ "$(adb ${sn_opt} shell 'getprop sys.boot_completed')" != 1 ]]; do
+    # note: no need, only empty string here.
+    #adb ${sn_opt} shell getprop | grep -F 'sys.boot_completed'
+    sleep "${adb_polling_interval_secs}"
+  done
+  echo "Device${sn:+ [$sn]} system is boot_completed."
+
+  # shellcheck disable=SC2086
+  if [[ "$(adb ${sn_opt} shell 'getprop ro.crypto.state')" != encrypted ]]; then
+    # note: disk is unencrypted when first boot.
+    # shellcheck disable=SC2086
+    while [[ "$(adb ${sn_opt} shell 'getprop vold.encrypt_progress')" != 100 ]]; do
+      # shellcheck disable=SC2086
+      adb ${sn_opt} shell getprop | grep -F 'vold.encrypt_progress'
+      sleep "${adb_polling_interval_secs}"
+    done
+    echo "Device${sn:+ [$sn]} encrypt_progress is 100%."
+
+    # shellcheck disable=SC2086
+    while [[ "$(adb ${sn_opt} shell 'getprop ro.crypto.state')" != encrypted ]]; do
+      # shellcheck disable=SC2086
+      adb ${sn_opt} shell getprop | grep -F 'ro.crypto.state'
+      sleep "${adb_polling_interval_secs}"
+    done
+  fi
+  echo "Device${sn:+ [$sn]} crypto.state is encrypted."
+}
+
+main() {
+  # options:
+  #   -s ADB_DEVICE_SERIAL_NO
+
+  local OPTARG OPTIND optchar
+  local sn_opt
+
+  while getopts ":s:" optchar; do
+    case "${optchar}" in
+      s) sn_opt="-s ${OPTARG}";;
+    esac
+  done
+
+  # shellcheck disable=SC2086
+  adb_wait_for_device ${sn_opt}
+}
+
+main "$@"
