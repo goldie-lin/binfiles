@@ -64,7 +64,7 @@ gen_filelist() {
     \) -prune -o \
     -type f -iregex \
     '^.*\/(Makefile(|\..*)|[^/]*\.(c|h|l|y|S|cc|hh|cpp|hpp|cxx|hxx|c++|java|aidl|xml|pl|py|sh|mk|mak|make|makefile|gradle|dxs|dec|dsc|fdf|inf|uni|vfr))$' \
-    -print > "${file_list}"
+    -fprintf "${file_list}" '%p\n'
 }
 
 # generate tags based on the same filelist
