@@ -13,7 +13,7 @@ set -euo pipefail
 # ====================
 
 # tags to be generated
-declare -gra tag_list=( "gtags" "ctags" ) # "cscope"
+declare -gra tag_list=( "gtags" "ctags" "cscope" )
 
 # filelist
 declare -gr file_list="cscope.files"
