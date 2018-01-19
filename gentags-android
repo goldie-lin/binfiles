@@ -17,6 +17,7 @@ declare -gra tag_list=( "gtags" "ctags" "cscope" )
 
 # filelist
 declare -gr file_list="filelist.txt"
+declare -gr file_list_quoted="${file_list%.*}.double-quoted.${file_list##*.}"
 
 # required pkg list: executable, package name
 declare -grA req_pkgs=( \
@@ -64,7 +65,8 @@ gen_filelist() {
     \) -prune -o \
     -type f -iregex \
     '^.*\/(Makefile(|\..*)|[^/]*\.(c|h|l|y|S|cc|hh|cpp|hpp|cxx|hxx|c++|java|aidl|xml|pl|py|sh|mk|mak|make|makefile|gradle|dxs|dec|dsc|fdf|inf|uni|vfr))$' \
-    -fprintf "${file_list}" '%p\n'
+    -fprintf "${file_list}" '%p\n' \
+    -fprintf "${file_list_quoted}" '"%p"\n'
 }
 
 # generate tags based on the same filelist
@@ -73,7 +75,7 @@ gen_tags() {
 
   for i in "$@"; do
     case "$i" in
-      cscope) cscope -bqki "${file_list}";;
+      cscope) cscope -bqki "${file_list_quoted}";;
       ctags) ctags -n --fields=+ai --C++-types=+p -L "${file_list}";;
       gtags) gtags --accept-dotfiles -f "${file_list}";;
     esac
