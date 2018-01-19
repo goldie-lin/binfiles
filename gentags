@@ -16,7 +16,7 @@ set -euo pipefail
 declare -gra tag_list=( "gtags" "ctags" "cscope" )
 
 # filelist
-declare -gr file_list="cscope.files"
+declare -gr file_list="filelist.txt"
 
 # required pkg list: executable, package name
 declare -grA req_pkgs=( \
