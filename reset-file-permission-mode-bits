@@ -24,6 +24,7 @@ exe_mode="a+x"
 main() {
   # input more user-specific file extensions
   read -r -p "Executables: [${preset_exts[*]}] (before). Add more? space-separated (eg: 'cmd exe') or just Enter to skip: " append_exts
+  # shellcheck disable=SC2206
   preset_exts+=( ${append_exts} )
   read -r -p "Executables: [${preset_exts[*]}] (after).  Ready to go? or Ctrl-C to abort. "
 

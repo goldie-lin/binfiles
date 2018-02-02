@@ -28,6 +28,7 @@ adb_wait_for_device() {
   while getopts ":s:" optchar; do
     case "${optchar}" in
       s) sn_opt="-s ${OPTARG}"; sn="${OPTARG}";;
+      *) ;;
     esac
   done
 
@@ -73,6 +74,7 @@ main() {
   while getopts ":s:" optchar; do
     case "${optchar}" in
       s) sn_opt="-s ${OPTARG}";;
+      *) ;;
     esac
   done
 

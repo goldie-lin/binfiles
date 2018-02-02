@@ -113,7 +113,7 @@ declare -grx cWhite=$'\e[37;1m'
 # ====================
 
 echo_title() {
-  echo -e "\n${cGreen}${*}${cClean}"
+  echo -e "\\n${cGreen}${*}${cClean}"
 }
 
 _get_linux_distro_name() {

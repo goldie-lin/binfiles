@@ -84,9 +84,9 @@ down_search() {
   [[ ! -f "${parent_dir}/${parent_clone_name}.${parent_clone_ext}" ]] || is_parent_clone_existed="true"
 
   # clone myself.
-  if [[ "${type}" -eq 1
-        && "${parent_origin_ext}" =~ ^(dts|dtsi)$
-        && ! "${parent_origin_name}" =~ ^(skeleton|dsi-panel-|fg-|.*-batterydata-).*
+  if [[ "${type}" -eq 1 \
+        && "${parent_origin_ext}" =~ ^(dts|dtsi)$ \
+        && ! "${parent_origin_name}" =~ ^(skeleton|dsi-panel-|fg-|.*-batterydata-).* \
         && "${is_parent_clone_existed}" == "false" ]]; then
     cp -i -- \
       "${parent_dir}/${parent_origin_name}.${parent_origin_ext}" \
@@ -94,9 +94,9 @@ down_search() {
   fi
 
   # update myself.
-  if [[ "${type}" -eq 1
-        && "${parent_origin_ext}" =~ ^(dts|dtsi)$
-        && "${is_parent_clone_existed}" == "false"
+  if [[ "${type}" -eq 1 \
+        && "${parent_origin_ext}" =~ ^(dts|dtsi)$ \
+        && "${is_parent_clone_existed}" == "false" \
         && "${#siblings[@]}" -gt 0 ]]; then
     for ((i=0; i<${#siblings[@]}; i++)); do
       sibling="${siblings[$i]}"
@@ -104,7 +104,7 @@ down_search() {
       sibling_origin_ext="${sibling##*.}"
       sibling_clone_name="${prefix}${sibling_origin_name}"  # prepend the prefix to the filename.
       sibling_clone_ext="${sibling_origin_ext}"
-      if [[ "${sibling_origin_ext}" =~ ^(dtsi)$
+      if [[ "${sibling_origin_ext}" =~ ^(dtsi)$ \
             && ! "${sibling_origin_name}" =~ ^(skeleton|dsi-panel-|fg-|.*-batterydata-).* ]]; then
         # un-escape self as a literal string against regular expresion.
         sibling_unescaped="${siblings[$i]}"
@@ -112,7 +112,7 @@ down_search() {
         sibling_clone_ext_unescaped="$(printf '%q' "${sibling_clone_ext}")"
         # update content.
         sed -i --follow-symlinks \
-          "/^\\s*\\(#include\\|\/include\/\\)\\s\\+\"${sibling_unescaped}\"/s;\"${sibling_unescaped}\";\"${sibling_clone_name_unescaped}.${sibling_clone_ext_unescaped}\";" \
+          "/^\\s*\\(#include\\|\\/include\\/\\)\\s\\+\"${sibling_unescaped}\"/s;\"${sibling_unescaped}\";\"${sibling_clone_name_unescaped}.${sibling_clone_ext_unescaped}\";" \
           -- "${parent_dir}/${parent_clone_name}.${parent_clone_ext}"
       fi
     done
@@ -122,8 +122,8 @@ down_search() {
   if [[ "${type}" -eq 2 ]]; then
     echo "$(expand_lvl_to_indents "$lvl")* <${parent_name}>"
   else  # default: 1
-    if [[ "${type}" -eq 1
-          && "${parent_origin_ext}" =~ ^(dts|dtsi)$
+    if [[ "${type}" -eq 1 \
+          && "${parent_origin_ext}" =~ ^(dts|dtsi)$ \
           && ! "${parent_origin_name}" =~ ^(skeleton|dsi-panel-|fg-|.*-batterydata-).* ]]; then
       if [[ "${is_parent_clone_existed}" == "false" ]]; then
         echo "$(expand_lvl_to_indents "$lvl")* \"${parent_name}\" --> \"${parent_clone_fullname}\""
@@ -154,7 +154,7 @@ main() {
 
   [[ -f "${parent}" ]] || (echo >&2 "Error: '${parent}' does not existed!" && return 2)
   [[ "${parent##*.}" =~ ^(dts)$ ]] || (echo >&2 "Error: '${parent}' not a dts file!" && return 3)
-  [[ "${prefix}" =~ ^([a-zA-Z])([a-zA-Z0-9]*)([-])$ ]] || (echo -e >&2 "Error: invalid prefix: \"${prefix}\"\nE.g., \"projectname-\"" && return 4)
+  [[ "${prefix}" =~ ^([a-zA-Z])([a-zA-Z0-9]*)([-])$ ]] || (echo -e >&2 "Error: invalid prefix: \"${prefix}\"\\nE.g., \"projectname-\"" && return 4)
 
   parent="$(readlink -f "${parent}")"  # relocate myself.
   parent_name="$(basename "${parent}")"
