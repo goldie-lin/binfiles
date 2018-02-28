@@ -237,6 +237,7 @@ do_repo_sync_list() {
   local _url=""
 
   if [[ -f ./venv/bin/activate && -r ./venv/bin/activate ]]; then
+    # shellcheck disable=SC1091
     source ./venv/bin/activate
   fi
 
