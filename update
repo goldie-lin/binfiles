@@ -15,7 +15,7 @@ declare -gra git_pull_opt=()
 declare -gra repo_sync_opt=( -q -f --prune )
 
 # git clone list: title, url
-declare -grA git_clone_list=( \
+declare -grA git_clone_list=(
   ["vimrc"]="https://github.com/goldie-lin/vimrc.git"
   ["dotfiles"]="https://github.com/goldie-lin/dotfiles.git"
   ["binfiles"]="https://github.com/goldie-lin/binfiles.git"
@@ -47,7 +47,7 @@ declare -grA git_clone_list=( \
 )
 
 # git pull list: title, path
-declare -grA git_pull_list=( \
+declare -grA git_pull_list=(
   ["vimrc"]="${HOME}/opt/vimrc"
   ["dotfiles"]="${HOME}/opt/dotfiles"
   ["binfiles"]="${HOME}/opt/binfiles"
@@ -79,13 +79,13 @@ declare -grA git_pull_list=( \
 )
 
 # repo init list: title, url
-declare -grA repo_init_list=( \
+declare -grA repo_init_list=(
   ["00 Android AOSP mirror"]="https://android.googlesource.com/mirror/manifest --mirror"
   ["01 Android AOSP working"]="https://android.googlesource.com/platform/manifest"
 )
 
 # repo sync list: title, path
-declare -grA repo_sync_list=( \
+declare -grA repo_sync_list=(
   ["00 Android AOSP mirror"]="${HOME}/opt/android-aosp-mirror"
   ["01 Android AOSP working"]="${HOME}/opt/android-aosp"
 )

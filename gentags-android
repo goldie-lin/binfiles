@@ -20,7 +20,7 @@ declare -gr file_list="filelist.txt"
 declare -gr file_list_quoted="${file_list%.*}.double-quoted.${file_list##*.}"
 
 # required pkg list: executable, package name
-declare -grA req_pkgs=( \
+declare -grA req_pkgs=(
   ["ctags"]="exuberant-ctags"
   ["cscope"]="cscope"
   ["gtags"]="global"
