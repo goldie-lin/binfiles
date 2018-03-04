@@ -273,7 +273,7 @@ do_update_sys_pkgs() {
   "Arch")
     if hash "yaourt" &>/dev/null; then
       echo_title "yaourt"
-      yaourt -Syua
+      yaourt -Syu
     elif hash "pacaur" &>/dev/null; then
       echo_title "pacaur"
       pacaur -Syu
