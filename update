@@ -274,9 +274,6 @@ do_update_sys_pkgs() {
     if hash "yaourt" &>/dev/null; then
       echo_title "yaourt"
       yaourt -Syu
-    elif hash "pacaur" &>/dev/null; then
-      echo_title "pacaur"
-      pacaur -Syu
     else
       echo_title "pacman"
       sudo pacman -Syu
