@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# Author: Goldie Lin
+# Description: Limit `git format-patch` within a specific file.
+# Requirements: git
+# Usage: $ git-format-patch-for-file <file>
+
+set -euo pipefail
+
+commits=()
+i=0
+
+if [[ -f "$1" ]]; then
+   mapfile -t commits < <(git log --reverse --pretty=format:'%h' "$1")
+   for ((i=0; i<${#commits[@]}; i++)); do
+     git format-patch --start-number $((i+1)) -1 "${commits[i]}"
+   done
+fi
+
+# vim: set sw=2 ts=2 sts=2 et tw=80 cc=+1 :
