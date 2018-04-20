@@ -9,8 +9,8 @@ set -euo pipefail
 commits=()
 i=0
 
-if [[ -f "$1" ]]; then
-   mapfile -t commits < <(git log --reverse --pretty=format:'%h' "$1")
+if [[ -e "${!#}" ]]; then
+   mapfile -t commits < <(git log --reverse --pretty=format:'%h' "$@")
    for ((i=0; i<${#commits[@]}; i++)); do
      git format-patch --start-number $((i+1)) -1 "${commits[i]}"
    done
