@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# Author: Goldie Lin
+# Description: Replacement of "repo upload" with all git commands.
+# Requirements:
+#   1. Install Git.
+#   2. Setup ~/.ssh/config, e.g.,
+#      Host x.x.x.x
+#        User xxx
+#        Port 29418
+
+local_branch_name_short="$(git name-rev --name-only HEAD)"
+local_branch_name_full="$(git symbolic-ref -q HEAD)"
+remote_name="$(git for-each-ref --format='%(upstream:remotename)' "${local_branch_name_full}")"
+remote_url="$(git remote get-url "${remote_name}")"
+remote_branch_name_full="$(git for-each-ref --format='%(upstream:remoteref)' "${local_branch_name_full}")"
+remote_branch_name_short="${remote_branch_name_full##*/}"
+
+pr_exec() {
+  echo "$*"
+  "$@"
+}
+
+pr_exec git push "${remote_url}.git" "${local_branch_name_short}:refs/for/${remote_branch_name_short}"
