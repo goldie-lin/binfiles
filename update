@@ -271,15 +271,15 @@ do_update_sys_pkgs() {
 
   case "${_distro}" in
   "Arch")
-    if hash "yaourt" &>/dev/null; then
-      echo_title "yaourt"
-      yaourt -Syu
+    if hash "yay" &>/dev/null; then
+      echo_title "yay"
+      yay -Syu
     elif hash "trizen" &>/dev/null; then
       echo_title "trizen"
       trizen -Syu
-    elif hash "yay" &>/dev/null; then
-      echo_title "yay"
-      yay -Syu
+    elif hash "yaourt" &>/dev/null; then
+      echo_title "yaourt"
+      yaourt -Syu
     else
       echo_title "pacman"
       sudo pacman -Syu
