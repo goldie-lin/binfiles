@@ -30,7 +30,7 @@ set -euo pipefail
 #   friendly, manni, pastie, perldoc.
 # Dark themes:
 #   native, paraiso-dark, vim, monokai, fruity, igor, rrt.
-pygments_opt="style=xcode"  # styles I preferred are: xcode, emacs.
+pygments_opt="style=vim"  # styles I preferred are: vim, native, xcode, emacs.
 
 # Function definitions
 # ====================
