@@ -50,7 +50,7 @@ down_search() {
   local -a subdirs=()
   local j=""
 
-  [[ ! -d "${path}" ]] &&  (echo >&2 "Error: '${path}' shall be a directory!" && return 1)
+  [[ ! -d "${path}" ]] &&  (echo "Error: '${path}' shall be a directory!" >&2 && return 1)
 
   while IFS= read -r -d $'\0' j; do
     subdirs[i++]="$j" # array indices are numeric context, will force arithmetic evaluation [1]

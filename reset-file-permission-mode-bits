@@ -60,7 +60,7 @@ main() {
       find "${default_root}" -regextype 'posix-egrep' -type f -iregex "^.*\\.($ext_ere)$" -print0 | xargs -0 --no-run-if-empty chmod "${exe_mode}"
       ;;
     *)
-      echo >&2 "Error: unexpected search mode: '${search_mode}'!"
+      echo "Error: unexpected search mode: '${search_mode}'!" >&2
       return 1
       ;;
   esac

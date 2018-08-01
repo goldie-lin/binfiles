@@ -17,7 +17,7 @@ declare -gr top_file2="build/make/core/envsetup.mk"
 
 check_pwd() {
   if [[ ! -f "${top_file}" && ! -f "${top_file2}" ]]; then
-    echo >&2 "Error: Please cd to Android root and run again."
+    echo "Error: Please cd to Android root and run again." >&2
     return 1
   fi
 }

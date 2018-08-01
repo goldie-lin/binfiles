@@ -36,7 +36,7 @@ check_depends() {
 
   for i in "${!req_pkgs[@]}"; do
     if ! hash "$i" &>/dev/null; then
-      echo >&2 "Error: '$i' (${req_pkgs[$i]}) not installed. Aborting."
+      echo "Error: '$i' (${req_pkgs[$i]}) not installed. Aborting." >&2
       exit 1
     fi
   done

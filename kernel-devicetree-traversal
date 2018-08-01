@@ -38,7 +38,7 @@ down_search() {
   local -a bindings=()
   local j=""
 
-  [[ -f "${parent}" ]] || (echo >&2 "Error: '${parent}' does not existed!" && return 1)
+  [[ -f "${parent}" ]] || (echo "Error: '${parent}' does not existed!" >&2 && return 1)
 
   parent_name="$(basename "${parent}")"
   parent_dir="$(readlink -f "$(dirname "${parent}")")"
@@ -81,8 +81,8 @@ main() {
   local parent_name=""
   local parent_dir=""
 
-  [[ -f "${parent}" ]] || (echo >&2 "Error: '${parent}' does not existed!" && return 2)
-  [[ "${parent##*.}" =~ ^(dts|dtsi)$ ]] || (echo >&2 "Error: '${parent}' not a dts/dtsi file!" && return 3)
+  [[ -f "${parent}" ]] || (echo "Error: '${parent}' does not existed!" >&2 && return 2)
+  [[ "${parent##*.}" =~ ^(dts|dtsi)$ ]] || (echo "Error: '${parent}' not a dts/dtsi file!" >&2 && return 3)
 
   parent="$(readlink -f "${parent}")"  # relocate myself.
   parent_name="$(basename "${parent}")"

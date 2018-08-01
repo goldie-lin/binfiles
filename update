@@ -164,7 +164,7 @@ _get_python_variant_for_repo() {
     elif hash "python2.6" &>/dev/null; then
       _python="python2.6"
     else
-      echo >&2 "Unaccepted version of $(python -V) for repo utility"
+      echo "Unaccepted version of $(python -V) for repo utility" >&2
       _returncode="1"
     fi
   fi

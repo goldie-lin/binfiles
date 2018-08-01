@@ -113,13 +113,13 @@ main() {
   # parse options
   tmp="$(getopt -o "${shortopts}" -l "${longopts}" -n "${script_name}" -s 'bash' -- "$@")"
   # shellcheck disable=SC2181
-  [[ $? -eq 0 ]] || { echo >&2 "Error: getopt parsing error."; return 1; }
+  [[ $? -eq 0 ]] || { echo "Error: getopt parsing error." >&2; return 1; }
   eval set -- "$tmp"
   while true; do
     case "$1" in
       -n|--dry-run) dry_run=1; shift;;
       --) shift; break;;
-      *) echo >&2 "Error: args parsing error, unrecognized option: '$1'."; return 2;;
+      *) echo "Error: args parsing error, unrecognized option: '$1'." >&2; return 2;;
     esac
   done
 
@@ -139,7 +139,7 @@ main() {
     fi
     fix_files "${path}" "${dry_run}"
   else
-    echo >&2 "Error: '${path}' path not found."; return 3
+    echo "Error: '${path}' path not found." >&2; return 3
   fi
 }
 
