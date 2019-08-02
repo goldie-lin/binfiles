@@ -196,7 +196,7 @@ repo_init() {
   local _repo=""
   local _python=""
 
-  _repo="$(command -v repo)"
+  _repo="$(which repo)"
   _python="$(_get_python_variant_for_repo)"
 
   mkdir -p -- "${_path}"
@@ -208,7 +208,7 @@ repo_sync() {
   local _repo=""
   local _python=""
 
-  _repo="$(command -v repo)"
+  _repo="$(which repo)"
   _python="$(_get_python_variant_for_repo)"
 
   (cd -- "${_path}" && "${_python}" "${_repo}" sync "${repo_sync_opt[@]}")
