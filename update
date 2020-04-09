@@ -196,6 +196,7 @@ repo_init() {
   local _repo=""
   local _python=""
 
+  # shellcheck disable=SC2230
   _repo="$(which repo)"
   _python="$(_get_python_variant_for_repo)"
 
@@ -208,6 +209,7 @@ repo_sync() {
   local _repo=""
   local _python=""
 
+  # shellcheck disable=SC2230
   _repo="$(which repo)"
   _python="$(_get_python_variant_for_repo)"
 
