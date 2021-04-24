@@ -177,14 +177,14 @@ git_clone() {
   local -r _url="$1"
   local -r _path="$2"
 
-  git clone -- "${_url}" "${_path}"
+  git clone --recurse-submodules -- "${_url}" "${_path}"
   git -C "${_path}" config --unset branch.master.rebase
 }
 
 git_pull() {
   local -r _path="$1"
 
-  git -C "${_path}" pull "${git_pull_opt[@]}"
+  git -C "${_path}" pull --recurse-submodules "${git_pull_opt[@]}"
   if [[ "${git_gc_enable}" == "yes" ]]; then
     git -C "${_path}" gc "${git_gc_opt[@]}" || true  # Do not abort, ignore exit code
   fi
