@@ -300,9 +300,9 @@ do_update_sys_pkgs() {
 main() {
   do_update_sys_pkgs
   do_update_vim_plugins
-  do_update_nvim_plugins
+  #do_update_nvim_plugins
   do_git_pull_list
-  do_repo_sync_list
+  #do_repo_sync_list
 }
 
 main "$@"
